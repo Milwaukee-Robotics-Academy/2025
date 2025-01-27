@@ -14,12 +14,16 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.function.BooleanSupplier;
+
 import swervelib.SwerveInputStream;
 
 /**
@@ -92,7 +96,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                    () -> driverXbox.getLeftY(),
                                                                    () -> driverXbox.getLeftX())
-                                                               .withControllerRotationAxis(() -> driverXbox.getRawAxis(2)-driverXbox.getRawAxis(3))
+                                                               .withControllerRotationAxis(() -> driverXbox.getRightX())
                                                                .deadband(OperatorConstants.DEADBAND)
                                                                .scaleTranslation(0.8)
                                                                .allianceRelativeControl(true);
@@ -112,6 +116,8 @@ public class RobotContainer
   Command driveFieldOrientedAnglularVelocitySim = drivebase.driveFieldOriented(driveAngularVelocitySim);
 
   Command driveSetpointGenSim = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
+
+  Trigger leftRigtAdjustTrigger = new Trigger(() -> (MathUtil.applyDeadband(driverXbox.getRawAxis(2)-driverXbox.getRawAxis(3), 0.1)>0.1));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -142,6 +148,10 @@ public class RobotContainer
     {
       driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
+      driverXbox.axisGreaterThan(2, 0.1).or(driverXbox.axisGreaterThan(3, 0.1)).whileTrue(
+       new RunCommand ( ()-> {drivebase.drive(new Translation2d(0,driverXbox.getLeftTriggerAxis()-driverXbox.getRightTriggerAxis()),0.0,false);
+       })
+      );
 
     }
     if (DriverStation.isTest())
