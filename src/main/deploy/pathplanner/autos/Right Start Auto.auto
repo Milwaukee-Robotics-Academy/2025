@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "First score"
+            "pathName": "1 Coral Auto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Return to Loading station"
           }
         }
       ]
