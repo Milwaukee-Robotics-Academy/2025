@@ -178,6 +178,8 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     }
 
+    //TODO: create xbox bindings for end effector in and out buttons
+
   }
 
   /**
