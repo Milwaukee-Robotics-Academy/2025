@@ -35,11 +35,13 @@ public class EndEffector extends SubsystemBase {
       .inverted(true);
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+  }
 
-
-    //create getter and setter methods for motors 
-
-
+  //create getter and setter methods for motors
+  public Command setVelocity(double velocity){
+    m_motor_9.set(velocity);
+    m_motor_10.set(velocity);
+    // TODO: return a command type
   }
 
   @Override

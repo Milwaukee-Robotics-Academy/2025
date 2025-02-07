@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.EndEffector;
 import java.io.File;
 import java.util.function.BooleanSupplier;
 
@@ -39,6 +40,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/fleetbot"));
+  private final EndEffector endEffector = new EndEffector();
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
@@ -119,6 +121,12 @@ public class RobotContainer
 
   Trigger leftRigtAdjustTrigger = new Trigger(() -> (MathUtil.applyDeadband(driverXbox.getRawAxis(2)-driverXbox.getRawAxis(3), 0.1)>0.1));
 
+  Command endEffectorIntake = endEffector.setVelocity(0.5);
+  
+  //Trigger endEffectorIntake = new Trigger(driverXbox.leftTrigger());
+
+  //Trigger endEffectorOutake = new Trigger(driverXbox.rightTrigger());
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -176,11 +184,14 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
+
+      driverXbox.leftTrigger().whileTrue(endEffector.setVelocity(0.5));
     }
 
     //TODO: create xbox bindings for end effector in and out buttons
 
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
