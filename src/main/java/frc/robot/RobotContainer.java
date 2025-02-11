@@ -159,9 +159,9 @@ public class RobotContainer
        })
       );
       // Coral End Effector Commands
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+    //  driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+      driverXbox.leftBumper().whileTrue(m_CoralEndEffector.intakeCommand());
       coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
     }
     if (DriverStation.isTest())
@@ -188,7 +188,7 @@ public class RobotContainer
       // Coral End Effector Commands
       driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+      driverXbox.leftBumper().whileTrue(m_CoralEndEffector.intakeCommand());
       coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
 
     }

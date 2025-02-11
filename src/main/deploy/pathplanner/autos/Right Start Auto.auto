@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ScoreCoralL1"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Return to Loading station"
