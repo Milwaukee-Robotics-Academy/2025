@@ -57,8 +57,8 @@ private void stop(){
   m_motor_10.set(0);
 }
 private void outtake(){
-  m_motor_9.set(-0.5);
-  m_motor_10.set(-0.5);
+  m_motor_9.set(0.5);
+  m_motor_10.set(0.2);
 }
 public Command intakeCommand(){
   return this.startEnd(
@@ -76,10 +76,10 @@ public Command stopCommand(){
 
 //verify if 5 is too much or not enough
 private boolean coralComingIn(){
-  return intakeSensor.getRange() <5;
+  return intakeSensor.getRange() <50;
 }
 private boolean coralAcquired(){
-  return acquiredSensor.getRange() <5;
+  return acquiredSensor.getRange() <50;
 }
 public Trigger coralLoadedTrigger(){
   return new Trigger(() -> (!coralComingIn() && coralAcquired()));
