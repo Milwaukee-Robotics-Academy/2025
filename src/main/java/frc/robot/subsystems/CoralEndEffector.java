@@ -65,18 +65,32 @@ private void outtake(){
   m_motor_9.set(0.5);
   m_motor_10.set(0.2);
 }
+
+private void nudgeForward(){
+  m_motor_9.set(0.1);
+  m_motor_10.set(0.1);
+}
 public Command intakeCommand(){
   return new RunCommand(this::intake).withName("Intake");
 }
 public Command outtakeCommand(){
   return new RunCommand(this::outtake).withName("Outtake");
 }
+
+public Command nudgeForwardCommand(){
+  return new RunCommand(this::nudgeForward).withName("nudge");
+}
+
 public Command stopCommand(){
  return new InstantCommand(this::stop).withName("Stopped");
 }
 
 public Command intakeWithSensorsCommand(){
-  return this.intakeCommand().until(()-> this.coralComingIn()).andThen(this.intakeCommand().withTimeout(0.3)).andThen(this.stopCommand());
+  return this.intakeCommand()
+  .until(()-> this.coralComingIn())
+  .andThen(this.nudgeForwardCommand())
+  .until(() -> this.coralAcquired())
+  .andThen(this.stopCommand());
 }
 
 //verify if 5 is too much or not enough
