@@ -18,8 +18,10 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -38,15 +40,21 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     SparkMaxConfig motor_10_config = new SparkMaxConfig();
     SparkMaxConfig motor_9_config = new SparkMaxConfig();
     global_config
-      .smartCurrentLimit(50)
+      .smartCurrentLimit(90)
       .idleMode(IdleMode.kBrake);
     motor_9_config
-      .apply(global_config);
-    motor_10_config
-      .apply(global_config)
+      .apply(global_config)      
       .inverted(true);
+    motor_10_config
+      .apply(global_config);
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
+    SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
+    SmartDashboard.putBoolean("At Intake", atInSensor());
+    SmartDashboard.putBoolean("At Outtake", atOutSensor());
+    SmartDashboard.putBoolean("Acquired", acquired());
+    
   }
 private void intake(){
   m_motor_9.set(0.5);
@@ -60,33 +68,70 @@ private void outtake(){
   m_motor_9.set(0.5);
   m_motor_10.set(0.2);
 }
+
+private void nudgeForward(){
+  m_motor_9.set(0.1);
+  m_motor_10.set(0.1);
+}
 public Command intakeCommand(){
-  return this.startEnd(
-    this::intake,
-    this::stop).withName("Intake");
+  return new RunCommand(this::intake, this).withName("Intake");
 }
 public Command outtakeCommand(){
-  return this.startEnd(
-    this::outtake,
-    this::stop).withName("Outtake");
-}
-public Command stopCommand(){
- return new InstantCommand(this::stop).withName("Stopped");
+  return new RunCommand(this::outtake, this).withName("Outtake");
 }
 
-//verify if 5 is too much or not enough
-private boolean coralComingIn(){
-  return intakeSensor.getRange() <50;
+public Command outtakeAndStopCommand(){
+  return outtakeCommand()
+  .until(() -> !this.acquired())
+  .andThen(stopCommand())
+  .withName("OuttakeAndStop");
 }
-private boolean coralAcquired(){
-  return acquiredSensor.getRange() <50;
+
+public Command nudgeForwardCommand(){
+  return new RunCommand(this::nudgeForward, this).withName("nudge");
 }
+
+public Command stopCommand(){
+ return new InstantCommand(this::stop, this).withName("Stopped");
+}
+
+public Command intakeWithSensorsCommand(){
+  return this.intakeCommand()
+  .until(()-> this.atInSensor())
+  .andThen(this.nudgeForwardCommand())
+  .until(() -> this.acquired())
+  .andThen(this.stopCommand()).withName("IntakeWithSensors");
+}
+
 public Trigger coralLoadedTrigger(){
-  return new Trigger(() -> (!coralComingIn() && coralAcquired()));
+  return new Trigger(() -> (acquired()));
 }
+
+private boolean atInSensor(){
+  return intakeSensor.getRange() <90;
+}
+
+private boolean atOutSensor(){
+  return acquiredSensor.getRange() <90;
+}
+
+
+private boolean acquired(){
+  if (!atInSensor() && atOutSensor()){
+    return true;
+  }
+  return false;
+}
+
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
+    SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
+    SmartDashboard.putBoolean("At Intake", atInSensor());
+    SmartDashboard.putBoolean("At Outtake", atOutSensor());
+    SmartDashboard.putBoolean("Acquired", acquired());
   }
 }
