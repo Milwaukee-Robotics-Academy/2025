@@ -98,7 +98,7 @@ private boolean coralComingIn(){
   return intakeSensor.getRange() <50;
 }
 private boolean coralAcquired(){
-  return ((acquiredSensor.getRange() <50) && coralComingIn()); 
+  return ((acquiredSensor.getRange() <50) && !coralComingIn()); 
 }
 public Trigger coralLoadedTrigger(){
   return new Trigger(() -> (coralComingIn()));
