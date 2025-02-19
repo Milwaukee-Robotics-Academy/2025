@@ -51,8 +51,10 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
     SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
-    SmartDashboard.putBoolean("Intake", coralComingIn());
-    SmartDashboard.putBoolean("Acquired", coralAcquired());
+    SmartDashboard.putBoolean("At Intake", atInSensor());
+    SmartDashboard.putBoolean("At Outtake", atOutSensor());
+    SmartDashboard.putBoolean("Acquired", acquired());
+    
   }
 private void intake(){
   m_motor_9.set(0.5);
@@ -94,12 +96,24 @@ public Command intakeWithSensorsCommand(){
   .andThen(this.stopCommand());
 }
 
+public Trigger coralLoadedTrigger(){
+  return new Trigger(() -> (acquired()));
+}
+
 private boolean atInSensor(){
   return intakeSensor.getRange() <50;
 }
 
 private boolean atOutSensor(){
-  return (acquiredSensor.getRange() <50); 
+  return acquiredSensor.getRange() <50;
+}
+
+
+private boolean acquired(){
+  if (atInSensor() && !atOutSensor()){
+    return true;
+  }
+  return false;
 }
 
 
@@ -109,7 +123,8 @@ private boolean atOutSensor(){
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
     SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
-    SmartDashboard.putBoolean("Intake", coralComingIn());
-    SmartDashboard.putBoolean("Acquired", coralAcquired());
+    SmartDashboard.putBoolean("At Intake", atInSensor());
+    SmartDashboard.putBoolean("At Outtake", atOutSensor());
+    SmartDashboard.putBoolean("Acquired", acquired());
   }
 }
