@@ -12,7 +12,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,6 +24,7 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.CoralEndEffector;
 import java.io.File;
+
 import swervelib.SwerveInputStream;
 
 /**
@@ -129,6 +132,8 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putData(m_CoralEndEffector);
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -148,6 +153,7 @@ public class RobotContainer
     m_drivebase.setDefaultCommand(!RobotBase.isSimulation() ?
                                 driveFieldOrientedAnglularVelocity :
                                 driveFieldOrientedAnglularVelocitySim);
+    m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
 
     if (Robot.isSimulation())
     {
@@ -160,7 +166,7 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
+   //   coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
     }
     if (DriverStation.isTest())
     {
@@ -175,17 +181,18 @@ public class RobotContainer
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
-      driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(
-          m_drivebase.driveToPose(
-              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-                              );
+      //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
+      // driverXbox.b().whileTrue(
+      //     m_drivebase.driveToPose(
+      //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+      //   
+      driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
+      driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftBumper().whileTrue(m_CoralEndEffector.intakeCommand());
-      coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
+      driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
+      driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
     }
 //check in with team about preference^ bumper preference for lock
     
@@ -208,4 +215,9 @@ public class RobotContainer
   {
     m_drivebase.setMotorBrake(brake);
   }
+
+public void periodic() {
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putData(m_CoralEndEffector);
+}
 }
