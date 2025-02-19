@@ -88,22 +88,21 @@ public Command stopCommand(){
 
 public Command intakeWithSensorsCommand(){
   return this.intakeCommand()
-  .until(()-> this.coralComingIn())
+  .until(()-> this.atInSensor())
   .andThen(this.nudgeForwardCommand())
-  .until(() -> this.coralAcquired())
+  .until(() -> this.atOutSensor())
   .andThen(this.stopCommand());
 }
 
-//verify if 5 is too much or not enough
-private boolean coralComingIn(){
+private boolean atInSensor(){
   return intakeSensor.getRange() <50;
 }
-private boolean coralAcquired(){
-  return ((acquiredSensor.getRange() <50) && !coralComingIn()); 
+
+private boolean atOutSensor(){
+  return (acquiredSensor.getRange() <50); 
 }
-public Trigger coralLoadedTrigger(){
-  return new Trigger(() -> (coralComingIn()));
-}
+
+
 
   @Override
   public void periodic() {
