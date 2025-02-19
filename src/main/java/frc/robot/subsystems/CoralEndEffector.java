@@ -43,10 +43,10 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
       .smartCurrentLimit(50)
       .idleMode(IdleMode.kBrake);
     motor_9_config
-      .apply(global_config);
-    motor_10_config
-      .apply(global_config)
+      .apply(global_config)      
       .inverted(true);
+    motor_10_config
+      .apply(global_config);
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
@@ -98,7 +98,7 @@ private boolean coralComingIn(){
   return intakeSensor.getRange() <50;
 }
 private boolean coralAcquired(){
-  return acquiredSensor.getRange() <50;
+  return ((acquiredSensor.getRange() <50) && coralComingIn()); 
 }
 public Trigger coralLoadedTrigger(){
   return new Trigger(() -> (coralComingIn()));
