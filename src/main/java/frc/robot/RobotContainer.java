@@ -22,6 +22,7 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.CoralEndEffector;
 import java.io.File;
+
 import swervelib.SwerveInputStream;
 
 /**
@@ -160,7 +161,7 @@ public class RobotContainer
       driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
+   //   coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
     }
     if (DriverStation.isTest())
     {
@@ -175,11 +176,13 @@ public class RobotContainer
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
-      driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(
-          m_drivebase.driveToPose(
-              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-                              );
+      //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
+      // driverXbox.b().whileTrue(
+      //     m_drivebase.driveToPose(
+      //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+      //   
+      driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
+      driverXbox.x().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
