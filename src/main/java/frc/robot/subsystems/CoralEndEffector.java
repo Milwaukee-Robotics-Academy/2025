@@ -92,7 +92,7 @@ public Command intakeWithSensorsCommand(){
   return this.intakeCommand()
   .until(()-> this.atInSensor())
   .andThen(this.nudgeForwardCommand())
-  .until(() -> this.atOutSensor())
+  .until(() -> this.acquired())
   .andThen(this.stopCommand());
 }
 
