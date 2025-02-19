@@ -153,6 +153,7 @@ public class RobotContainer
     m_drivebase.setDefaultCommand(!RobotBase.isSimulation() ?
                                 driveFieldOrientedAnglularVelocity :
                                 driveFieldOrientedAnglularVelocitySim);
+    m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
 
     if (Robot.isSimulation())
     {
@@ -186,11 +187,11 @@ public class RobotContainer
       //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
       //   
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
-      driverXbox.x().whileTrue(m_CoralEndEffector.outtakeCommand());
+      driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeCommand());
+      driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
     }
 //check in with team about preference^ bumper preference for lock

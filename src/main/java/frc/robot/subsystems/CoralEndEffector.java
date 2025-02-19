@@ -74,18 +74,25 @@ private void nudgeForward(){
   m_motor_10.set(0.1);
 }
 public Command intakeCommand(){
-  return new RunCommand(this::intake).withName("Intake");
+  return new RunCommand(this::intake, this).withName("Intake");
 }
 public Command outtakeCommand(){
-  return new RunCommand(this::outtake).withName("Outtake");
+  return new RunCommand(this::outtake, this).withName("Outtake");
+}
+
+public Command outtakeAndStopCommand(){
+  return outtakeCommand()
+  .until(() -> !this.acquired())
+  .andThen(stopCommand())
+  .withName("OuttakeAndStop");
 }
 
 public Command nudgeForwardCommand(){
-  return new RunCommand(this::nudgeForward).withName("nudge");
+  return new RunCommand(this::nudgeForward, this).withName("nudge");
 }
 
 public Command stopCommand(){
- return new InstantCommand(this::stop).withName("Stopped");
+ return new InstantCommand(this::stop, this).withName("Stopped");
 }
 
 public Command intakeWithSensorsCommand(){
@@ -93,7 +100,7 @@ public Command intakeWithSensorsCommand(){
   .until(()-> this.atInSensor())
   .andThen(this.nudgeForwardCommand())
   .until(() -> this.acquired())
-  .andThen(this.stopCommand());
+  .andThen(this.stopCommand()).withName("IntakeWithSensors");
 }
 
 public Trigger coralLoadedTrigger(){
@@ -110,7 +117,7 @@ private boolean atOutSensor(){
 
 
 private boolean acquired(){
-  if (atInSensor() && !atOutSensor()){
+  if (!atInSensor() && atOutSensor()){
     return true;
   }
   return false;
