@@ -18,6 +18,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,6 +48,9 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
       .inverted(true);
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
+    SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
+    
   }
 private void intake(){
   m_motor_9.set(0.5);
@@ -88,5 +92,7 @@ public Trigger coralLoadedTrigger(){
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
+    SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
   }
 }
