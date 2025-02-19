@@ -55,6 +55,7 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     SmartDashboard.putBoolean("At Outtake", atOutSensor());
     SmartDashboard.putBoolean("Acquired", acquired());
     
+
   }
 private void intake(){
   m_motor_9.set(0.5);
