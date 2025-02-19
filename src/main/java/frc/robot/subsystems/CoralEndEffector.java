@@ -21,6 +21,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -65,10 +66,10 @@ private void outtake(){
   m_motor_10.set(0.2);
 }
 public Command intakeCommand(){
-  return new InstantCommand(this::intake).withName("Intake");
+  return new RunCommand(this::intake).withName("Intake");
 }
 public Command outtakeCommand(){
-  return new InstantCommand(this::outtake).withName("Outtake");
+  return new RunCommand(this::outtake).withName("Outtake");
 }
 public Command stopCommand(){
  return new InstantCommand(this::stop).withName("Stopped");
