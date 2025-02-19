@@ -214,4 +214,9 @@ public class RobotContainer
   {
     m_drivebase.setMotorBrake(brake);
   }
+
+public void periodic() {
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putData(m_CoralEndEffector);
+}
 }
