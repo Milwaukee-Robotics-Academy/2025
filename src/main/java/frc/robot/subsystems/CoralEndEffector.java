@@ -65,17 +65,17 @@ private void outtake(){
   m_motor_10.set(0.2);
 }
 public Command intakeCommand(){
-  return this.startEnd(
-    this::intake,
-    this::stop).withName("Intake");
+  return new InstantCommand(this::intake).withName("Intake");
 }
 public Command outtakeCommand(){
-  return this.startEnd(
-    this::outtake,
-    this::stop).withName("Outtake");
+  return new InstantCommand(this::outtake).withName("Outtake");
 }
 public Command stopCommand(){
  return new InstantCommand(this::stop).withName("Stopped");
+}
+
+public Command intakeWithSensorsCommand(){
+  return this.intakeCommand().until(()-> this.coralComingIn()).andThen(this.intakeCommand().withTimeout(0.3)).andThen(this.stopCommand());
 }
 
 //verify if 5 is too much or not enough
@@ -86,7 +86,7 @@ private boolean coralAcquired(){
   return acquiredSensor.getRange() <50;
 }
 public Trigger coralLoadedTrigger(){
-  return new Trigger(() -> (!coralComingIn() && coralAcquired()));
+  return new Trigger(() -> (coralComingIn()));
 }
 
   @Override

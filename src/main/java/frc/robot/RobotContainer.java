@@ -184,8 +184,7 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeCommand());
-      coralLoaded.onChange(m_CoralEndEffector.stopCommand());
+      driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
     }
 //check in with team about preference^ bumper preference for lock
     
