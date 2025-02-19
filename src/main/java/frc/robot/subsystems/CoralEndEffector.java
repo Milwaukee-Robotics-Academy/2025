@@ -40,7 +40,7 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     SparkMaxConfig motor_10_config = new SparkMaxConfig();
     SparkMaxConfig motor_9_config = new SparkMaxConfig();
     global_config
-      .smartCurrentLimit(50)
+      .smartCurrentLimit(90)
       .idleMode(IdleMode.kBrake);
     motor_9_config
       .apply(global_config)      
@@ -101,11 +101,11 @@ public Trigger coralLoadedTrigger(){
 }
 
 private boolean atInSensor(){
-  return intakeSensor.getRange() <50;
+  return intakeSensor.getRange() <90;
 }
 
 private boolean atOutSensor(){
-  return acquiredSensor.getRange() <50;
+  return acquiredSensor.getRange() <90;
 }
 
 
