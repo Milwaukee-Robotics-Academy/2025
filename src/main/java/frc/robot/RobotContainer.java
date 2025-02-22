@@ -181,7 +181,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
+      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
       // driverXbox.b().whileTrue(
       //     m_drivebase.driveToPose(
