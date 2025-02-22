@@ -87,7 +87,6 @@ public Command outtakeAndStopCommand(){
   .withName("OuttakeAndStop");
 }
 
-
 public Command nudgeForwardCommand(){
   return new RunCommand(this::nudgeForward, this).withName("nudge");
 }
