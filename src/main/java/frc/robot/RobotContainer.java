@@ -24,6 +24,7 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.CoralEndEffector;
 import java.io.File;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import swervelib.SwerveInputStream;
 
@@ -37,6 +38,7 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final         CommandXboxController shooterXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       m_drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/fleetbot"));
@@ -163,9 +165,9 @@ public class RobotContainer
        new RunCommand ( ()-> {m_drivebase.drive(new Translation2d(0,driverXbox.getLeftTriggerAxis()-driverXbox.getRightTriggerAxis()),0.0,false);
        })
       );
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+      shooterXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+      shooterXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
+      shooterXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
    //   coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
     }
     if (DriverStation.isTest())
@@ -176,11 +178,11 @@ public class RobotContainer
       driverXbox.y().whileTrue(m_drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
       driverXbox.back().whileTrue(m_drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      shooterXbox.leftBumper().onTrue(Commands.none());
+      shooterXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
+      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
       // driverXbox.b().whileTrue(
       //     m_drivebase.driveToPose(
@@ -191,8 +193,8 @@ public class RobotContainer
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
-      driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      shooterXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
+      shooterXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
     }
 //check in with team about preference^ bumper preference for lock
     
@@ -208,7 +210,8 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return m_drivebase.getAutonomousCommand("Right Start Auto");
+    //return m_drivebase.getAutonomousCommand("Right Start Auto");
+    return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake)
