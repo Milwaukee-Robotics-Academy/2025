@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -68,7 +69,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
                                                                 () -> driverXbox.getLeftY() * -1,
                                                                 () -> driverXbox.getLeftX() * -1)
-                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                            .withControllerRotationAxis(() -> driverXbox.getRightX()*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -214,7 +215,8 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+   return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake)
