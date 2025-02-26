@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -67,7 +69,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
                                                                 () -> driverXbox.getLeftY() * -1,
                                                                 () -> driverXbox.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> driverXbox.getRightX() *-1)
+                                                            .withControllerRotationAxis(() -> driverXbox.getRightX()*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -119,6 +121,8 @@ public class RobotContainer
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
   Command driveSetpointGenSim = m_drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
+
+  private SendableChooser<Command> autoChooser;
 
   Trigger leftRigtAdjustTrigger = new Trigger(() -> (MathUtil.applyDeadband(driverXbox.getRawAxis(2)-driverXbox.getRawAxis(3), 0.1)>0.1));
 
@@ -196,8 +200,10 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
     }
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
 //check in with team about preference^ bumper preference for lock
-    
 
   }
 
