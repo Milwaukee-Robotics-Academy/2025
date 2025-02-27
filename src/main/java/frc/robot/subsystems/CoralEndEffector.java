@@ -40,7 +40,7 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     SparkMaxConfig motor_10_config = new SparkMaxConfig();
     SparkMaxConfig motor_9_config = new SparkMaxConfig();
     global_config
-      .smartCurrentLimit(90)
+      .smartCurrentLimit(50)
       .idleMode(IdleMode.kBrake);
     motor_9_config
       .apply(global_config)      
