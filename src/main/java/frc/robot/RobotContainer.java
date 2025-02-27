@@ -216,8 +216,9 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-   return m_drivebase.getAutonomousCommand("Right Start Auto");
-   //return new WaitCommand(1);
+   //return m_drivebase.getAutonomousCommand("Right Start Auto");
+   //return autoChooser.getSelected();
+   return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake)
