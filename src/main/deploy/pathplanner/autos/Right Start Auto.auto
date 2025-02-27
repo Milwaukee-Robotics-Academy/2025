@@ -11,6 +11,24 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "test"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Return to Loading station"
