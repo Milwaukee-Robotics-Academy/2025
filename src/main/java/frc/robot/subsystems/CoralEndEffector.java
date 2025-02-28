@@ -40,13 +40,14 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     SparkMaxConfig motor_10_config = new SparkMaxConfig();
     SparkMaxConfig motor_9_config = new SparkMaxConfig();
     global_config
-      .smartCurrentLimit(90)
+      .smartCurrentLimit(0)
       .idleMode(IdleMode.kBrake);
     motor_9_config
       .apply(global_config)      
-      .inverted(true);
+      .inverted(false);
     motor_10_config
-      .apply(global_config);
+      .apply(global_config)
+      .inverted(true);
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
@@ -66,13 +67,13 @@ private void stop(){
   m_motor_10.set(0);
 }
 private void outtake(){
-  m_motor_9.set(0.5);
-  m_motor_10.set(0.2);
+  m_motor_9.set(0.4);
+  m_motor_10.set(0.1);
 }
 
 private void nudgeForward(){
-  m_motor_9.set(0.1);
-  m_motor_10.set(0.1);
+  m_motor_9.set(0.001);
+  m_motor_10.set(0.001);
 }
 public Command intakeCommand(){
   return new RunCommand(this::intake, this).withName("Intake");
@@ -109,7 +110,7 @@ public Trigger coralLoadedTrigger(){
 }
 
 private boolean atInSensor(){
-  return intakeSensor.getRange() <90;
+  return intakeSensor.getRange() <78;
 }
 
 private boolean atOutSensor(){

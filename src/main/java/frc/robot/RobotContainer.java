@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -181,7 +182,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
+      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
       // driverXbox.b().whileTrue(
       //     m_drivebase.driveToPose(
@@ -201,7 +202,7 @@ public class RobotContainer
   }
 
 
-  /**
+  /**2
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
@@ -209,7 +210,11 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return m_drivebase.getAutonomousCommand("Right Start Auto");
+    //
+
+
+     //return m_drivebase.getAutonomousCommand("Right Start Auto");
+    return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake)
