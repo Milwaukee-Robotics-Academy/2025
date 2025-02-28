@@ -149,7 +149,7 @@ public class Vision {
             camera.curStdDevs);
         SmartDashboard.putNumber("Vision/x", pose.estimatedPose.getTranslation().getX()); 
         SmartDashboard.putNumber("Vision/y", pose.estimatedPose.getTranslation().getY());
-        SmartDashboard.putNumber("Vision/angle", pose.estimatedPose.getRotation().getAngle();
+        SmartDashboard.putNumber("Vision/angle", pose.estimatedPose.toPose2d().getRotation().getDegrees());
         SmartDashboard.putNumber("Vision/time", Timer.getFPGATimestamp());
         
       }
