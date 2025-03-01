@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.11875,
-        "y": 5.205788934426229
+        "x": 5.3105532786885234,
+        "y": 5.469518442622951
       },
       "prevControl": {
-        "x": 5.502356557377048,
-        "y": 6.392571721311475
+        "x": 5.838012295081967,
+        "y": 6.644313524590164
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Coral End"
     }
   ],
   "rotationTargets": [],

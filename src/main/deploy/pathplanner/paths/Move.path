@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.3105532786885234,
-        "y": 5.469518442622951
+        "x": 7.768032786885246,
+        "y": 6.80015368852459
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.902971311476714,
-        "y": 6.116854508194625
+        "x": 8.013177955807976,
+        "y": 6.751124654740043
       },
       "isLocked": false,
-      "linkedName": "Right Coral End"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.6672500000000006,
-        "y": 7.34975
+        "x": 5.598258196721312,
+        "y": 6.80015368852459
       },
       "prevControl": {
-        "x": 3.1102500000000015,
-        "y": 7.11575
+        "x": 5.349284895104385,
+        "y": 6.822787625035218
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.90716270295842
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -118.072486935853
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
