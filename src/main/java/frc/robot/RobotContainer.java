@@ -179,7 +179,7 @@ public class RobotContainer
       m_drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
       driverXbox.x().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.y().whileTrue(m_drivebase.driveToDistanceCommand(1.0, 0.2));
+      driverXbox.y().whileTrue(m_drivebase.driveToPose(new Pose2d(12.66, 3.07, new Rotation2d().fromDegrees(57.9))));
       driverXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
       driverXbox.back().whileTrue(m_drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
@@ -194,6 +194,8 @@ public class RobotContainer
       //   
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
       driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
+      driverXbox.y().whileTrue(m_drivebase.driveToPose(new Pose2d(12.66, 3.07, new Rotation2d().fromDegrees(57.9))));
+      driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, new Rotation2d().fromDegrees(143.03))));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
@@ -229,5 +231,6 @@ public class RobotContainer
 public void periodic() {
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
+    SmartDashboard.putData(m_drivebase);
 }
 }

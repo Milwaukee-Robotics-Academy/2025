@@ -151,6 +151,9 @@ public class Vision {
         SmartDashboard.putNumber("Vision/y", pose.estimatedPose.getTranslation().getY());
         SmartDashboard.putNumber("Vision/angle", pose.estimatedPose.toPose2d().getRotation().getDegrees());
         SmartDashboard.putNumber("Vision/time", Timer.getFPGATimestamp());
+        SmartDashboard.putNumber("Vision/posetimestamp", pose.timestampSeconds);
+        SmartDashboard.putBoolean("Vision/posePresent", poseEst.isPresent());
+        SmartDashboard.putBoolean("Vision/poseEmpty", poseEst.isEmpty());
         
       }
     }
