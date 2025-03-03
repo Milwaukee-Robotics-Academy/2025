@@ -24,6 +24,8 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.CoralEndEffector;
 import java.io.File;
+import java.util.jar.Attributes.Name;
+
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import swervelib.SwerveInputStream;
@@ -140,6 +142,8 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("outtake", m_CoralEndEffector.outtakeAndStopCommand());
+    NamedCommands.registerCommand("intake", m_CoralEndEffector.intakeWithSensorsCommand());
   }
 
   /**
@@ -210,9 +214,14 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    //return m_drivebase.getAutonomousCommand("Right Start Auto");
-    return new WaitCommand(1);
+    return m_drivebase.getAutonomousCommand("LEFT AUTO");
   }
+
+  // {
+  //   // An example command will be run in autonomous
+  //   //return m_drivebase.getAutonomousCommand("Right Start Auto");
+  //   return new WaitCommand(1);
+  // }
 
   public void setMotorBrake(boolean brake)
   {
