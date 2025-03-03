@@ -144,6 +144,7 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
   }
 
   /**
@@ -196,7 +197,7 @@ public class RobotContainer
       driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
       driverXbox.y().whileTrue(m_drivebase.driveToPose(new Pose2d(12.66, 3.07, new Rotation2d().fromDegrees(57.9))));
       driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, new Rotation2d().fromDegrees(143.03))));
-      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
@@ -217,8 +218,6 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-   // An example command will be run in autonomous
-   // return m_drivebase.getAutonomousCommand("Right Start Auto");
    //return autoChooser.getSelected();
    return new WaitCommand(1);
   }

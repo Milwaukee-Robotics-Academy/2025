@@ -140,6 +140,10 @@ public class Vision {
        */
       visionSim.update(swerveDrive.getSimulationDriveTrainPose().get());
     }
+
+
+//https://www.chiefdelphi.com/t/photonvision-multitag-filters/493859/3
+
     for (Cameras camera : Cameras.values()) {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
@@ -154,7 +158,6 @@ public class Vision {
         SmartDashboard.putNumber("Vision/posetimestamp", pose.timestampSeconds);
         SmartDashboard.putBoolean("Vision/posePresent", poseEst.isPresent());
         SmartDashboard.putBoolean("Vision/poseEmpty", poseEst.isEmpty());
-        
       }
     }
 
