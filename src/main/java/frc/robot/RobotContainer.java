@@ -193,7 +193,7 @@ public class RobotContainer
       //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
       //   
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
-      driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
+      shooterXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());

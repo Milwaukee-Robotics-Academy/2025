@@ -58,16 +58,16 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     
   }
 private void intake(){
-  m_motor_9.set(0.5);
-  m_motor_10.set(0.5);
+  m_motor_9.set(0.7);
+  m_motor_10.set(0.7);
 }
 private void stop(){
   m_motor_9.set(0);
   m_motor_10.set(0);
 }
 private void outtake(){
-  m_motor_9.set(0.4);
-  m_motor_10.set(0.4);
+  m_motor_9.set(0.35);
+  m_motor_10.set(0.35);
 }
 
 private void nudgeForward(){
