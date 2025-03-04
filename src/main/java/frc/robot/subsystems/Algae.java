@@ -10,12 +10,11 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.simulation.SimulatableCANSparkMax;
 import frc.robot.wrappers.REVThroughBoreEncoder;
 
-public class Algae extends SubsystemBase {
+public class Algae extends Subsystem {
 
   /*-------------------------------- Private instance variables ---------------------------------*/
   private static Algae mInstance;
