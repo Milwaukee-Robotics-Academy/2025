@@ -48,4 +48,39 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
   }
+
+  public static class Algae {
+    // WRIST
+    public static final int kWristMotorId = 13;
+    public static final int kIntakeMotorId = 14;
+
+    public static final int kWristEncoderId = 9;
+
+    public static final int kMaxWristCurrent = 10;
+
+    public static final double kWristP = 0.01;
+    public static final double kWristI = 0.0;
+    public static final double kWristD = 0.0;
+
+    public static final double kWristKS = 0.0;
+    public static final double kWristKG = 0.0;
+    public static final double kWristKV = 0.100;
+    public static final double kWristKA = 0.0;
+
+    public static final double kWristOffset = 141.0;
+
+    public static final double kWristMaxVelocity = 690.0;
+    public static final double kWristMaxAcceleration = 1380.0;
+
+    public static final double kStowAngle = 233.0;
+    public static final double kDeAlgaeAngle = 215.0;
+    public static final double kGroundIntakeAngle = 162.0;
+
+    // INTAKE
+    public static final int kMaxIntakeCurrent = 20;
+
+    public static final double kIntakeSpeed = 0.6;
+    public static final double kEjectSpeed = -0.3;
+    public static final double kGroundIntakeSpeed = -0.3;
+  }
 }
