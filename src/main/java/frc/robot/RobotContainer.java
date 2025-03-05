@@ -215,8 +215,8 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-   //return autoChooser.getSelected();
-   return new WaitCommand(1);
+   return autoChooser.getSelected();
+   //return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake)
