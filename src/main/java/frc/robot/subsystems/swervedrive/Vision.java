@@ -20,8 +20,10 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import java.awt.Desktop;
 import java.util.ArrayList;
@@ -138,6 +140,10 @@ public class Vision {
        */
       visionSim.update(swerveDrive.getSimulationDriveTrainPose().get());
     }
+
+
+//https://www.chiefdelphi.com/t/photonvision-multitag-filters/493859/3
+
     for (Cameras camera : Cameras.values()) {
       Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
       if (poseEst.isPresent()) {
@@ -145,6 +151,13 @@ public class Vision {
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
             pose.timestampSeconds,
             camera.curStdDevs);
+        SmartDashboard.putNumber("Vision/x", pose.estimatedPose.getTranslation().getX()); 
+        SmartDashboard.putNumber("Vision/y", pose.estimatedPose.getTranslation().getY());
+        SmartDashboard.putNumber("Vision/angle", pose.estimatedPose.toPose2d().getRotation().getDegrees());
+        SmartDashboard.putNumber("Vision/time", Timer.getFPGATimestamp());
+        SmartDashboard.putNumber("Vision/posetimestamp", pose.timestampSeconds);
+        SmartDashboard.putBoolean("Vision/posePresent", poseEst.isPresent());
+        SmartDashboard.putBoolean("Vision/poseEmpty", poseEst.isEmpty());
       }
     }
 
@@ -310,30 +323,30 @@ public class Vision {
      * Left Camera
      */
     // LEFT_CAM("left",
-    //          new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
-    //          new Translation3d(Units.inchesToMeters(12.056),
-    //                            Units.inchesToMeters(10.981),
-    //                            Units.inchesToMeters(8.44)),
-    //          VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    /**
-     * Right Camera
-     */
+    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
+    //     new Translation3d(Units.inchesToMeters(12.056),
+    //         Units.inchesToMeters(10.981),
+    //         Units.inchesToMeters(8.44)),
+    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    // /**
+    //  * Right Camera
+    //  */
     // RIGHT_CAM("right",
-    //           new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-    //           new Translation3d(Units.inchesToMeters(12.056),
-    //                             Units.inchesToMeters(-10.981),
-    //                             Units.inchesToMeters(8.44)),
-    //           VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
+    //     new Translation3d(Units.inchesToMeters(12.056),
+    //         Units.inchesToMeters(-10.981),
+    //         Units.inchesToMeters(8.44)),
+    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Center Camera
+     * TODO: RENAME to match actual camera name
      */
-    CENTER_CAM("Arducam_OV9782_USB_Camera" + //
-            "",
-               new Rotation3d(0, Units.degreesToRadians(18), 0),
-               new Translation3d(Units.inchesToMeters(0),
-                                 Units.inchesToMeters(-10.687),
-                                 Units.inchesToMeters(8)),
-               VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+    CENTER_CAM("Arducam_OV9782_USB_Camera",
+        new Rotation3d(0, Units.degreesToRadians(18), 0),
+        new Translation3d(Units.inchesToMeters(0),
+            Units.inchesToMeters(10),
+            Units.inchesToMeters(8)),
+        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 
     /**
      * Latency alert to use when high latency is detected.
