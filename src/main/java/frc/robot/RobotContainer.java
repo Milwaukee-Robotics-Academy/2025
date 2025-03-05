@@ -207,6 +207,7 @@ public class RobotContainer
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       operatorXbox.b().onTrue(m_CoralEndEffector.stopCommand());
       operatorXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
+      operatorXbox.y().toggleOnTrue(m_AlgaeManipulator.lockAlgaeCommand());
       operatorXbox.start().whileTrue(Commands.none());
       operatorXbox.back().whileTrue(Commands.none());
       operatorXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
