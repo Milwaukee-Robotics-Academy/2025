@@ -46,8 +46,8 @@ public class RobotContainer
   private final SwerveSubsystem       m_drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
-
   private final AlgaeManipulator m_AlgaeManipulator = new AlgaeManipulator();
+  ////////private final AlgaeManipulator m_AlgaeManipulator = new AlgaeManipulator();
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
@@ -241,8 +241,8 @@ public class RobotContainer
     //
 
 
-     //return m_drivebase.getAutonomousCommand("Right Start Auto");
-    return new WaitCommand(1);
+     return m_drivebase.getAutonomousCommand("Curvy Auto");
+    //return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake)

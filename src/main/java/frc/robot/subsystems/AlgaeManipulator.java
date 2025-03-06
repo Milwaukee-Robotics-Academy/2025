@@ -40,10 +40,7 @@ public class AlgaeManipulator extends SubsystemBase {
     m_motor_12.configure(motor_12_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
   }
 
-  private void LockAlgae(){
-    
-
-  }
+  
   private void intake(){
     m_motor_11.set(0.5);
   }
