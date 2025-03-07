@@ -41,10 +41,11 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     SparkMaxConfig motor_9_config = new SparkMaxConfig();
     global_config
       .smartCurrentLimit(50)
-      .idleMode(IdleMode.kBrake);
+      .idleMode(IdleMode.kBrake)
+      .inverted(true);
     motor_9_config
       .apply(global_config)      
-      .inverted(true);
+      .inverted(false);
     motor_10_config
       .apply(global_config);
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
