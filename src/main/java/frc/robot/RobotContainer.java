@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -39,9 +40,17 @@ public class RobotContainer
 {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  
   final         CommandXboxController driverXbox = new CommandXboxController(0);
-  final         CommandXboxController operatorXbox = new CommandXboxController(1
-  );
+  //final         CommandXboxController operatorXbox = new CommandXboxController(1);
+  
+  //--------------------------------------------------------------------------------------+
+  
+  final          CommandJoystick driverJoystick = new CommandJoystick(0);
+  final          CommandJoystick operatorJoystick = new CommandJoystick(1);
+   //Put Operator Joystick Here...
+
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       m_drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/fleetbot"));
@@ -55,28 +64,32 @@ public class RobotContainer
   // right stick controls the rotational velocity 
   // buttons are quick rotation positions to different ways to face
   // WARNING: default buttons are on the same buttons as the ones defined in configureBindings
-  AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(m_drivebase,
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                                                                               OperatorConstants.LEFT_Y_DEADBAND),
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
+ 
+ /*  AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(m_drivebase,
+                                                               () -> -MathUtil.applyDeadband(driverJoystick.getLeftY(),
+                                                                                              OperatorConstants.LEFT_Y_DEADBAND),
+                                                                () -> -MathUtil.applyDeadband(driverJoystick.getLeftX(),
                                                                                                OperatorConstants.DEADBAND),
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
+                                                                 () -> -MathUtil.applyDeadband(driverJoystick.getTwistChannel(),
                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
-                                                                 driverXbox.getHID()::getYButtonPressed,
                                                                  driverXbox.getHID()::getAButtonPressed,
-                                                                 driverXbox.getHID()::getXButtonPressed,
-                                                                 driverXbox.getHID()::getBButtonPressed
+                                                                 driverJoystick.getHID().button(2),
+                                                                 driverJoystick.getHID().button(3),
+                                                                 driverJoystick.getHID().button(4)
+  );
                                                                  
-                                                              
-                                                                 );
+*/
+  
+                                                                                                   
+                                                                 
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() * -1,
-                                                                () -> driverXbox.getLeftX() * -1)
-                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                                () -> driverJoystick.getX() * -1,
+                                                                () -> driverJoystick.getY() * -1)
+                                                            .withControllerRotationAxis(driverJoystick::getTwistChannel)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -84,8 +97,8 @@ public class RobotContainer
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
    */
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
-                                                                                             driverXbox::getRightY)
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverJoystick::getX,
+                                                                                             driverJoystick::getY)
                                                            .headingWhile(true);
 
 
@@ -106,19 +119,19 @@ public class RobotContainer
   Command driveSetpointGen = m_drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
 
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-                                                                   () -> driverXbox.getLeftY(),
-                                                                   () -> driverXbox.getLeftX())
-                                                               .withControllerRotationAxis(() -> driverXbox.getRightX())
+                                                                   () -> driverJoystick.getY(),
+                                                                   () -> driverJoystick.getX())
+                                                               .withControllerRotationAxis(() -> driverJoystick.getTwistChannel())
                                                                .deadband(OperatorConstants.DEADBAND)
                                                                .scaleTranslation(0.8)
                                                                .allianceRelativeControl(true);
   // Derive the heading axis with math!
   SwerveInputStream driveDirectAngleSim     = driveAngularVelocitySim.copy()
                                                                      .withControllerHeadingAxis(() -> Math.sin(
-                                                                                                    driverXbox.getRawAxis(
+                                                                                                    driverJoystick.getRawAxis(
                                                                                                         2) * Math.PI) * (Math.PI * 2),
                                                                                                 () -> Math.cos(
-                                                                                                    driverXbox.getRawAxis(
+                                                                                                    driverJoystick.getRawAxis(
                                                                                                         2) * Math.PI) *
                                                                                                       (Math.PI * 2))
                                                                      .headingWhile(true);
@@ -129,13 +142,13 @@ public class RobotContainer
 
   Command driveSetpointGenSim = m_drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
 
-  Trigger leftRigtAdjustTrigger = new Trigger(() -> (MathUtil.applyDeadband(driverXbox.getRawAxis(2)-driverXbox.getRawAxis(3), 0.1)>0.1));
+  //CommandJoystick leftRigtAdjustTrigger = new CommandJoystick(() -> (MathUtil.applyDeadband(driverJoystick.getRawAxis(2)-driverJoystick.getRawAxis(3), 0.1)>0.1));
 
   Trigger coralLoaded = m_CoralEndEffector.coralLoadedTrigger();
   
-  Trigger AlgaeManipulatorIntake = new Trigger(driverXbox.leftTrigger());
+  Trigger AlgaeManipulatorIntake = new Trigger(driverJoystick.button(7));
 
-  Trigger AlgaeManipulatorOutake = new Trigger(driverXbox.rightTrigger());
+  Trigger AlgaeManipulatorOutake = new Trigger(driverJoystick.button(8));
 
   
   /**
@@ -171,18 +184,18 @@ public class RobotContainer
 
     if (Robot.isSimulation())
     {
-      driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      driverXbox.button(1).whileTrue(m_drivebase.sysIdDriveMotorCommand());
-      driverXbox.axisGreaterThan(2, 0.1).or(driverXbox.axisGreaterThan(3, 0.1)).whileTrue(
-       new RunCommand ( ()-> {m_drivebase.drive(new Translation2d(0,driverXbox.getLeftTriggerAxis()-driverXbox.getRightTriggerAxis()),0.0,false);
-       })
-      );
-      operatorXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      operatorXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      operatorXbox.leftTrigger().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      operatorXbox.rightTrigger().whileTrue(m_AlgaeManipulator.outtakeCommand());
-      operatorXbox.povUp().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      operatorXbox.povDown().whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
+     // driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverJoystick.button(11).whileTrue(m_drivebase.sysIdDriveMotorCommand());
+     // driverJoystick.axisGreaterThan(2, 0).or(driverJoystick.axisGreaterThan(3, 0.1)).whileTrue(
+       //new RunCommand ( ()-> {m_drivebase.drive(new Translation2d(0,driverXbox.getLeftTriggerAxis()-driverXbox.getRightTriggerAxis()),0.0,false);
+      // })
+      //);
+      operatorJoystick.button(2).whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+      operatorJoystick.button(1).whileTrue(m_CoralEndEffector.outtakeCommand());
+      operatorJoystick.button(7).whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+      operatorJoystick.button(8).whileTrue(m_AlgaeManipulator.outtakeCommand());
+      operatorJoystick.axisGreaterThan(2, 0).whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+      operatorJoystick.axisLessThan(2, 0).whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
      
       //driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
    //   coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
@@ -191,35 +204,33 @@ public class RobotContainer
     {
       m_drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      operatorXbox.x().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      operatorXbox.y().whileTrue(m_drivebase.driveToDistanceCommand(1.0, 0.2));
-      operatorXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
-      operatorXbox.back().whileTrue(m_drivebase.centerModulesCommand());
-      operatorXbox.leftBumper().onTrue(Commands.none());
-      operatorXbox.rightBumper().onTrue(Commands.none());
-      operatorXbox.leftTrigger().onTrue(Commands.none());
-      operatorXbox.rightTrigger().onTrue(Commands.none());
-      operatorXbox.povUp().onTrue(Commands.none());
-      operatorXbox.povDown().onTrue(Commands.none());
-      
+      operatorJoystick.button(3).whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+      operatorJoystick.button(4).whileTrue(m_drivebase.driveToDistanceCommand(1.0, 0.2));
+      //operatorXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
+      //operatorXbox.back().whileTrue(m_drivebase.centerModulesCommand());
+      operatorJoystick.button(2).onTrue(Commands.none());
+      operatorJoystick.button(1).onTrue(Commands.none());
+      operatorJoystick.button(7).onTrue(Commands.none());
+      operatorJoystick.button(8).onTrue(Commands.none());
+      operatorJoystick.axisGreaterThan(2, 0).onTrue(Commands.none());
+      operatorJoystick.axisLessThan(2, 0).whileTrue(Commands.none());
+     
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-      operatorXbox.b().onTrue(m_CoralEndEffector.stopCommand());
-      operatorXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
-      operatorXbox.y().toggleOnTrue(m_AlgaeManipulator.lockAlgaeCommand());
-      operatorXbox.start().whileTrue(Commands.none());
-      operatorXbox.back().whileTrue(Commands.none());
-      operatorXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
-      operatorXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-      operatorXbox.leftTrigger().onTrue(m_AlgaeManipulator.intakeCommand());
-      operatorXbox.leftTrigger().onFalse(m_AlgaeManipulator.stopCommand());
-      operatorXbox.rightTrigger().onTrue(m_AlgaeManipulator.outtakeCommand());
-      operatorXbox.rightTrigger().onFalse(m_AlgaeManipulator.stopCommand());
-      operatorXbox.povUp().onTrue(m_AlgaeManipulator.goUpFunctionCommand());
-      operatorXbox.povUp().onFalse(m_AlgaeManipulator.stop2Command());
-      operatorXbox.povDown().onTrue(m_AlgaeManipulator.goDownFunctionCommand());
-      operatorXbox.povDown().onFalse(m_AlgaeManipulator.stop2Command());
+      driverJoystick.button(12).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+      operatorJoystick.button(9).onTrue(m_CoralEndEffector.stopCommand());
+      operatorJoystick.button(2).whileTrue(m_CoralEndEffector.intakeCommand());
+      operatorJoystick.button(4).toggleOnTrue(m_AlgaeManipulator.lockAlgaeCommand());
+      operatorJoystick.button(5).onTrue(m_CoralEndEffector.outtakeAndStopCommand());
+      operatorJoystick.button(6).onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      operatorJoystick.button(7).onTrue(m_AlgaeManipulator.intakeCommand());
+      operatorJoystick.button(7).onFalse(m_AlgaeManipulator.stopCommand());
+      operatorJoystick.button(8).onTrue(m_AlgaeManipulator.outtakeCommand());
+      operatorJoystick.button(8).onFalse(m_AlgaeManipulator.stopCommand());
+      operatorJoystick.axisGreaterThan(2, 0).onTrue(m_AlgaeManipulator.goUpFunctionCommand());
+      operatorJoystick.axisGreaterThan(2, 0).onFalse(m_AlgaeManipulator.stop2Command());
+      operatorJoystick.axisLessThan(2, 0).onTrue(m_AlgaeManipulator.goDownFunctionCommand());
+      operatorJoystick.axisLessThan(2, 0).onFalse(m_AlgaeManipulator.stop2Command());
     }
 //check in with team about preference^ bumper preference for lock
     //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
