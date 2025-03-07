@@ -179,7 +179,7 @@ public class RobotContainer
 
       driverXbox.x().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.y().whileTrue(m_drivebase.driveToDistanceCommand(1.0, 0.2));
-      driverXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyro)));
+      driverXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       driverXbox.back().whileTrue(m_drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
