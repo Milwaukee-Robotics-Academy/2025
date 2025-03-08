@@ -44,24 +44,6 @@ public class RobotContainer
   private final SwerveSubsystem       m_drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
-  // Applies deadbands and inverts controls because joysticks
-  // are back-right positive while robot
-  // controls are front-left positive
-  // left stick controls translation
-  // right stick controls the rotational velocity 
-  // buttons are quick rotation positions to different ways to face
-  // WARNING: default buttons are on the same buttons as the ones defined in configureBindings
-  AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(m_drivebase,
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                                                                               OperatorConstants.LEFT_Y_DEADBAND),
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                                                                               OperatorConstants.DEADBAND),
-                                                                 () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
-                                                                                               OperatorConstants.RIGHT_X_DEADBAND),
-                                                                 driverXbox.getHID()::getYButtonPressed,
-                                                                 driverXbox.getHID()::getAButtonPressed,
-                                                                 driverXbox.getHID()::getXButtonPressed,
-                                                                 driverXbox.getHID()::getBButtonPressed);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -74,29 +56,12 @@ public class RobotContainer
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
 
-  /**
-   * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
-   */
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
-                                                                                             driverXbox::getRightY)
-                                                           .headingWhile(true);
-
-
-  // Applies deadbands and inverts controls because joysticks
-  // are back-right positive while robot
-  // controls are front-left positive
-  // left stick controls translation
-  // right stick controls the desired angle NOT angular rotation
-  Command driveFieldOrientedDirectAngle = m_drivebase.driveFieldOriented(driveDirectAngle);
-
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
   // left stick controls translation
   // right stick controls the angular velocity of the robot
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
-
-  Command driveSetpointGen = m_drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
 
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
                                                                    () -> driverXbox.getLeftY(),
@@ -116,21 +81,9 @@ public class RobotContainer
                                                                                                       (Math.PI * 2))
                                                                      .headingWhile(true);
 
-  Command driveFieldOrientedDirectAngleSim = m_drivebase.driveFieldOriented(driveDirectAngleSim);
-
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
-  Command driveSetpointGenSim = m_drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
-
   private SendableChooser<Command> autoChooser;
-
-  Trigger leftRigtAdjustTrigger = new Trigger(() -> (MathUtil.applyDeadband(driverXbox.getRawAxis(2)-driverXbox.getRawAxis(3), 0.1)>0.1));
-
-  Trigger coralLoaded = m_CoralEndEffector.coralLoadedTrigger();
-  
-  //Trigger endEffectorIntake = new Trigger(driverXbox.leftTrigger());
-
-  //Trigger endEffectorOutake = new Trigger(driverXbox.rightTrigger());
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -172,25 +125,9 @@ public class RobotContainer
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
    //   coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
-    }
-    if (DriverStation.isTest())
-    {
-      m_drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-
-      driverXbox.x().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.y().whileTrue(m_drivebase.driveToDistanceCommand(1.0, 0.2));
-      driverXbox.start().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-      driverXbox.back().whileTrue(m_drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-      //driverXbox.x().onTrue(Commands.runOnce(m_drivebase::addFakeVisionReading));
-      // driverXbox.b().whileTrue(
-      //     m_drivebase.driveToPose(
-      //         new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-      //   
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
       driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
       driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
