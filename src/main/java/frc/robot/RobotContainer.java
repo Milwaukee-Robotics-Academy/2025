@@ -112,7 +112,6 @@ public class RobotContainer {
       driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      // coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
     } else {
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
@@ -136,6 +135,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return m_drivebase.getAutonomousCommand("Right Start Auto");
