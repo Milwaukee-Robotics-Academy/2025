@@ -57,11 +57,6 @@ public class RobotContainer {
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
 
-  // Applies deadbands and inverts controls because joysticks
-  // are back-right positive while robot
-  // controls are front-left positive
-  // left stick controls translation
-  // right stick controls the angular velocity of the robot
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
@@ -71,18 +66,6 @@ public class RobotContainer {
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
-  // Derive the heading axis with math!
-  SwerveInputStream driveDirectAngleSim = driveAngularVelocitySim.copy()
-      .withControllerHeadingAxis(() -> Math.sin(
-          driverXbox.getRawAxis(
-              2) * Math.PI)
-          * (Math.PI * 2),
-          () -> Math.cos(
-              driverXbox.getRawAxis(
-                  2) * Math.PI)
-              *
-              (Math.PI * 2))
-      .headingWhile(true);
 
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
@@ -158,7 +141,6 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return m_drivebase.getAutonomousCommand("Right Start Auto");
     return autoChooser.getSelected();
-    // return new WaitCommand(1);
   }
 
   public void setMotorBrake(boolean brake) {
