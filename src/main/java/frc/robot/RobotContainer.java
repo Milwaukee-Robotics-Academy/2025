@@ -112,7 +112,6 @@ public class RobotContainer {
       driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      // coralLoaded.onTrue(m_CoralEndEffector.stopCommand());
     } else {
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
