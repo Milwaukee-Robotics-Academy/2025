@@ -9,6 +9,12 @@
           "data": {
             "pathName": "Center - 1 coral"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
+          }
         }
       ]
     }

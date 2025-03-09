@@ -138,13 +138,13 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
   }
 
   /**
@@ -218,8 +218,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-   //return autoChooser.getSelected();
-   return new WaitCommand(1);
+   return autoChooser.getSelected();
   }
 
   public void setMotorBrake(boolean brake)
