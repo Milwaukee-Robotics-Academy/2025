@@ -90,6 +90,7 @@ public class AlgaeManipulator extends SubsystemBase {
   }
 
   private void stopIntake(){
+  LockAlgae();
     m_motor_11.set(0);
   }
 

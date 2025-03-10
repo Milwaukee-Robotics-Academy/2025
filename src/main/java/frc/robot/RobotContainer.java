@@ -128,7 +128,9 @@ public class RobotContainer {
       operatorJoystick.axisLessThan(1,-0.5).whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
       operatorJoystick.button(11).onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       operatorJoystick.button(12).onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-      operatorJoystick.button(4).whileTrue(m_AlgaeManipulator.)
+      operatorJoystick.button(7).whileTrue(m_AlgaeManipulator.intakeCommand());
+      operatorJoystick.button(8).whileTrue(m_AlgaeManipulator.outtakeCommand());
+      operatorJoystick.button(9).onTrue(m_AlgaeManipulator.stopCommand());
     }
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
