@@ -102,9 +102,8 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
                                                                    () -> driverXbox.getLeftY(),
                                                                    () -> driverXbox.getLeftX())
-                                                               .withControllerRotationAxis(() -> driverXbox.getRightX())
+                                                               .withControllerRotationAxis(() -> driverXbox.getRightX()*-1)
                                                                .deadband(OperatorConstants.DEADBAND)
-                                                               .scaleTranslation(0.8)
                                                                .allianceRelativeControl(true);
   // Derive the heading axis with math!
   SwerveInputStream driveDirectAngleSim     = driveAngularVelocitySim.copy()
