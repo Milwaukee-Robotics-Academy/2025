@@ -76,6 +76,7 @@ public class Vision {
   /**
    * Field from {@link swervelib.SwerveDrive#field}
    */
+  
   private Field2d field2d;
     private int visionCount = 0;
   
@@ -120,6 +121,7 @@ public class Vision {
       }
   
     }
+
   
     /**
      * Update the pose estimation inside of {@link SwerveDrive} with all of the
@@ -159,6 +161,7 @@ public class Vision {
         SmartDashboard.putNumber("Vision/posetimestamp", pose.timestampSeconds);
         SmartDashboard.putBoolean("Vision/posePresent", poseEst.isPresent());
         SmartDashboard.putBoolean("Vision/poseEmpty", poseEst.isEmpty());
+
       }
     }
 
@@ -313,7 +316,7 @@ public class Vision {
       }
     }
 
-    field2d.getObject("tracked targets").setPoses(poses);
+    visionField.getObject("tracked targets").setPoses(poses);
   }
 
   /**
