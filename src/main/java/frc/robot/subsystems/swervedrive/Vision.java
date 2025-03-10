@@ -316,7 +316,7 @@ public class Vision {
       }
     }
 
-    visionField.getObject("tracked targets").setPoses(poses);
+  //  visionField.getObject("tracked targets").setPoses(poses);
   }
 
   /**
