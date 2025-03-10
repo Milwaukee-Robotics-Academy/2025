@@ -20,8 +20,10 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import java.awt.Desktop;
 import java.util.ArrayList;
@@ -74,77 +76,92 @@ public class Vision {
   /**
    * Field from {@link swervelib.SwerveDrive#field}
    */
+  
   private Field2d field2d;
-
-  /**
-   * Constructor for the Vision class.
-   *
-   * @param currentPose Current pose supplier, should reference
-   *                    {@link SwerveDrive#getPose()}
-   * @param field       Current field, should be {@link SwerveDrive#field}
-   */
-  public Vision(Supplier<Pose2d> currentPose, Field2d field) {
-    this.currentPose = currentPose;
-    this.field2d = field;
-
-    if (Robot.isSimulation()) {
-      visionSim = new VisionSystemSim("Vision");
-      visionSim.addAprilTags(fieldLayout);
-
-      for (Cameras c : Cameras.values()) {
-        c.addToVisionSim(visionSim);
+    private int visionCount = 0;
+  
+    /**
+     * Constructor for the Vision class.
+     *
+     * @param currentPose Current pose supplier, should reference
+     *                    {@link SwerveDrive#getPose()}
+     * @param field       Current field, should be {@link SwerveDrive#field}
+     */
+    public Vision(Supplier<Pose2d> currentPose, Field2d field) {
+      this.currentPose = currentPose;
+      this.field2d = field;
+  
+      if (Robot.isSimulation()) {
+        visionSim = new VisionSystemSim("Vision");
+        visionSim.addAprilTags(fieldLayout);
+  
+        for (Cameras c : Cameras.values()) {
+          c.addToVisionSim(visionSim);
+        }
+  
+        openSimCameraViews();
       }
-
-      openSimCameraViews();
     }
-  }
-
-  /**
-   * Calculates a target pose relative to an AprilTag on the field.
-   *
-   * @param aprilTag    The ID of the AprilTag.
-   * @param robotOffset The offset {@link Transform2d} of the robot to apply to
-   *                    the pose for the robot to position
-   *                    itself correctly.
-   * @return The target pose of the AprilTag.
-   */
-  public static Pose2d getAprilTagPose(int aprilTag, Transform2d robotOffset) {
-    Optional<Pose3d> aprilTagPose3d = fieldLayout.getTagPose(aprilTag);
-    if (aprilTagPose3d.isPresent()) {
-      return aprilTagPose3d.get().toPose2d().transformBy(robotOffset);
-    } else {
-      throw new RuntimeException("Cannot get AprilTag " + aprilTag + " from field " + fieldLayout.toString());
+  
+    /**
+     * Calculates a target pose relative to an AprilTag on the field.
+     *
+     * @param aprilTag    The ID of the AprilTag.
+     * @param robotOffset The offset {@link Transform2d} of the robot to apply to
+     *                    the pose for the robot to position
+     *                    itself correctly.
+     * @return The target pose of the AprilTag.
+     */
+    public static Pose2d getAprilTagPose(int aprilTag, Transform2d robotOffset) {
+      Optional<Pose3d> aprilTagPose3d = fieldLayout.getTagPose(aprilTag);
+      if (aprilTagPose3d.isPresent()) {
+        return aprilTagPose3d.get().toPose2d().transformBy(robotOffset);
+      } else {
+        throw new RuntimeException("Cannot get AprilTag " + aprilTag + " from field " + fieldLayout.toString());
+      }
+  
     }
 
-  }
+  
+    /**
+     * Update the pose estimation inside of {@link SwerveDrive} with all of the
+     * given poses.
+     *
+     * @param swerveDrive {@link SwerveDrive} instance.
+     */
+    public void updatePoseEstimation(SwerveDrive swerveDrive) {
+      if (SwerveDriveTelemetry.isSimulation && swerveDrive.getSimulationDriveTrainPose().isPresent()) {
+        /*
+         * In the maple-sim, odometry is simulated using encoder values, accounting for
+         * factors like skidding and drifting.
+         * As a result, the odometry may not always be 100% accurate.
+         * However, the vision system should be able to provide a reasonably accurate
+         * pose estimation, even when odometry is incorrect.
+         * (This is why teams implement vision system to correct odometry.)
+         * Therefore, we must ensure that the actual robot pose is provided in the
+         * simulator when updating the vision simulation during the simulation.
+         */
+        visionSim.update(swerveDrive.getSimulationDriveTrainPose().get());
+      }
+  
+  
+  //https://www.chiefdelphi.com/t/photonvision-multitag-filters/493859/3
+  
+      for (Cameras camera : Cameras.values()) {
+        Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
+        if (poseEst.isPresent()) {
+          var pose = poseEst.get();
+          swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+              pose.timestampSeconds,
+              camera.curStdDevs);
+          SmartDashboard.putNumber("Vision/x", pose.estimatedPose.getTranslation().getX()); 
+          SmartDashboard.putNumber("Vision/y", pose.estimatedPose.getTranslation().getY());
+          SmartDashboard.putNumber("Vision/angle", pose.estimatedPose.toPose2d().getRotation().getDegrees());
+          SmartDashboard.putNumber("Vision/count", visionCount++);
+        SmartDashboard.putNumber("Vision/posetimestamp", pose.timestampSeconds);
+        SmartDashboard.putBoolean("Vision/posePresent", poseEst.isPresent());
+        SmartDashboard.putBoolean("Vision/poseEmpty", poseEst.isEmpty());
 
-  /**
-   * Update the pose estimation inside of {@link SwerveDrive} with all of the
-   * given poses.
-   *
-   * @param swerveDrive {@link SwerveDrive} instance.
-   */
-  public void updatePoseEstimation(SwerveDrive swerveDrive) {
-    if (SwerveDriveTelemetry.isSimulation && swerveDrive.getSimulationDriveTrainPose().isPresent()) {
-      /*
-       * In the maple-sim, odometry is simulated using encoder values, accounting for
-       * factors like skidding and drifting.
-       * As a result, the odometry may not always be 100% accurate.
-       * However, the vision system should be able to provide a reasonably accurate
-       * pose estimation, even when odometry is incorrect.
-       * (This is why teams implement vision system to correct odometry.)
-       * Therefore, we must ensure that the actual robot pose is provided in the
-       * simulator when updating the vision simulation during the simulation.
-       */
-      visionSim.update(swerveDrive.getSimulationDriveTrainPose().get());
-    }
-    for (Cameras camera : Cameras.values()) {
-      Optional<EstimatedRobotPose> poseEst = getEstimatedGlobalPose(camera);
-      if (poseEst.isPresent()) {
-        var pose = poseEst.get();
-        swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-            pose.timestampSeconds,
-            camera.curStdDevs);
       }
     }
 
@@ -299,7 +316,7 @@ public class Vision {
       }
     }
 
-    field2d.getObject("tracked targets").setPoses(poses);
+    visionField.getObject("tracked targets").setPoses(poses);
   }
 
   /**
@@ -309,30 +326,32 @@ public class Vision {
     /**
      * Left Camera
      */
-    LEFT_CAM("left",
-        new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
-        new Translation3d(Units.inchesToMeters(12.056),
-            Units.inchesToMeters(10.981),
-            Units.inchesToMeters(8.44)),
-        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    /**
-     * Right Camera
-     */
-    RIGHT_CAM("right",
-        new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-        new Translation3d(Units.inchesToMeters(12.056),
-            Units.inchesToMeters(-10.981),
-            Units.inchesToMeters(8.44)),
-        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    // LEFT_CAM("left",
+    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
+    //     new Translation3d(Units.inchesToMeters(12.056),
+    //         Units.inchesToMeters(10.981),
+    //         Units.inchesToMeters(8.44)),
+    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    // /**
+    //  * Right Camera
+    //  */
+    // RIGHT_CAM("right",
+    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
+    //     new Translation3d(Units.inchesToMeters(12.056),
+    //         Units.inchesToMeters(-10.981),
+    //         Units.inchesToMeters(8.44)),
+    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Center Camera
+     * TODO: RENAME to match actual camera name
      */
     CENTER_CAM("center",
         new Rotation3d(0, Units.degreesToRadians(0), 0),
         new Translation3d(Units.inchesToMeters(11),
             Units.inchesToMeters(9),
             Units.inchesToMeters(7)),
-        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+            VecBuilder.fill(4, 4, 8), 
+            VecBuilder.fill(0.5, 0.5, 1));
 
     /**
      * Latency alert to use when high latency is detected.

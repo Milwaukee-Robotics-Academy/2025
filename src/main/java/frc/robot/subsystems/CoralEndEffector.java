@@ -44,9 +44,11 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
       .idleMode(IdleMode.kBrake);
     motor_9_config
       .apply(global_config)      
-      .inverted(true);
+      .inverted(false);
     motor_10_config
-      .apply(global_config);
+      .apply(global_config)
+      .inverted(true);
+
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
