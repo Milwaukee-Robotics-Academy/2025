@@ -41,6 +41,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandJoystick driverJoystick = new CommandJoystick(0);
+  final CommandXboxController driverXboxController = new CommandXboxController(0);
   final CommandJoystick operatorJoystick = new CommandJoystick(1);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
@@ -53,9 +54,9 @@ public class RobotContainer {
    * by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverJoystick.getY() * -1,
-      () -> driverJoystick.getX() * -1)
-      .withControllerRotationAxis(() -> driverJoystick.getZ() * -1)
+      () -> driverXboxController.getLeftY() * -1,
+      () -> driverXboxController.getRightX() * -1)
+     // .withControllerRotationAxis(() -> driverXboxController.getRightTriggerAxis()  - (driverXboxController.getLeftTriggerAxis()))
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
@@ -64,9 +65,9 @@ public class RobotContainer {
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverJoystick.getY(),
-      () -> driverJoystick.getX())
-      .withControllerRotationAxis(() -> driverJoystick.getZ() * -1)
+      () -> driverXboxController.getLeftY(),
+      () -> driverXboxController.getLeftX())
+      .withControllerRotationAxis(() -> driverXboxController.getRightX() * -1)
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
 
@@ -120,7 +121,8 @@ public class RobotContainer {
       driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
       // coralLoaded.onTrue(m_CoralEndEffector.stopCommand()); */
     } else {
-      driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+     // driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+     driverXboxController.leftBumper().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       operatorJoystick.button(3).onTrue(m_CoralEndEffector.stopCommand());
       operatorJoystick.button(2).whileTrue(m_CoralEndEffector.intakeCommand());
       operatorJoystick.button(1).whileTrue(m_CoralEndEffector.outtakeCommand());
