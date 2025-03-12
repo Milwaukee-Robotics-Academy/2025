@@ -214,7 +214,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return m_drivebase.getAutonomousCommand("LEFT AUTO");
+    return m_drivebase.getAutonomousCommand("MIDDLE AUTO");
   }
 
   // {

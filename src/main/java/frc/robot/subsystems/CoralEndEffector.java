@@ -45,9 +45,11 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     motor_9_config
       .apply(global_config)      
       .inverted(false);
+      //change to false for actual
     motor_10_config
       .apply(global_config)
       .inverted(true);
+      // change to true for actual
     m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
@@ -67,7 +69,7 @@ private void stop(){
 }
 private void outtake(){
   m_motor_9.set(0.35);
-  m_motor_10.set(0.35);
+  m_motor_10.set(0.5);
 }
 
 private void nudgeForward(){
