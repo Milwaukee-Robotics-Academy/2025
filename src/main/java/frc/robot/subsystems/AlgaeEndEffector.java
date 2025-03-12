@@ -102,11 +102,11 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_motor_12.set(0.25);
   }
 
-  private void stopArm(){
+  public void stopArm(){
     m_motor_12.set(0);
   }
 
-  private void lowerArm(){
+  public void lowerArm(){
     m_motor_12.set(-0.25);
   }
 
@@ -125,10 +125,11 @@ public class AlgaeEndEffector extends SubsystemBase {
     return new InstantCommand(this::stopIntake, this).withName("StopIntake");
   }
   public Command goUpFunctionCommand(){
-    return new RunCommand(this::raiseArm, this).withName("RaiseArm");
+    return this.startEnd(this::raiseArm,this::stopArm);
+    //return new RunCommand(this::raiseArm, this).withName("RaiseArm");
   }
   public Command goDownFunctionCommand(){
-    return new RunCommand(this::lowerArm, this).withName("LowerArm");
+    return this.startEnd(this::lowerArm,this::stopArm);
   }
     
   public Command stop2Command(){
