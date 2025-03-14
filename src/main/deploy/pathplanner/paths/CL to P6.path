@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.7677500000053605,
-        "y": 6.871999999999789
+        "x": 1.5943647540983608,
+        "y": 7.327612704918032
       },
       "prevControl": null,
       "nextControl": {
-        "x": -2.14499999998928,
-        "y": 0.7002499999995804
+        "x": 2.2297131147540985,
+        "y": 6.812141393442622
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral Intake"
     },
     {
       "anchor": {
-        "x": 3.44175000000536,
-        "y": 7.408249999999789
+        "x": 3.7161885245901636,
+        "y": 5.469518442622951
       },
       "prevControl": {
-        "x": 8.765250000010692,
-        "y": 7.739749999999577
+        "x": 3.1767418032786883,
+        "y": 5.901075819672131
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 84.58297788614337
+    "rotation": -60.12400730831053
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.46454101443547
+    "rotation": -50.01311375503581
   },
   "useDefaultConstraints": true
 }

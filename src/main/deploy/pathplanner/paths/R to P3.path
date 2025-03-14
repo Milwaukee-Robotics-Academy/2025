@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.7677500000053605,
-        "y": 6.871999999999789
+        "x": 7.360450819672131,
+        "y": 1.89718237704918
       },
       "prevControl": null,
       "nextControl": {
-        "x": -2.14499999998928,
-        "y": 0.7002499999995804
+        "x": 6.113729508196721,
+        "y": 1.837243852459017
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.44175000000536,
-        "y": 7.408249999999789
+        "x": 6.1017418032786885,
+        "y": 6.572387295081967
       },
       "prevControl": {
-        "x": 8.765250000010692,
-        "y": 7.739749999999577
+        "x": 6.856967213114753,
+        "y": 5.817161885245902
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Middle Coral 1"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 84.58297788614337
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.46454101443547
+    "rotation": -178.93250031625982
   },
   "useDefaultConstraints": true
 }
