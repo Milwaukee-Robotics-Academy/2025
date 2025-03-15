@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7761270491803276,
-        "y": 5.205788934426229
+        "x": 3.7641393442622952,
+        "y": 5.229764344262294
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.960963114754098,
-        "y": 5.625358606557377
+        "x": 2.0978483606557377,
+        "y": 4.52248975409836
       },
       "isLocked": false,
-      "linkedName": "Mid to player"
+      "linkedName": "back to player for coral 2"
     },
     {
       "anchor": {
-        "x": 1.3306352459016395,
-        "y": 7.159784836065573
+        "x": 1.5584016393442621,
+        "y": 7.375563524590164
       },
       "prevControl": {
-        "x": 2.2057377049180324,
-        "y": 6.692264344262294
+        "x": 0.8990778688524587,
+        "y": 5.937038934426229
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -50.04245106917093
+    "rotation": -51.58194465517796
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -55.22216863363615
+    "rotation": -59.036243467926546
   },
   "useDefaultConstraints": true
 }

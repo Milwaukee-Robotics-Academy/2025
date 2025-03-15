@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,22 +16,20 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.AlgaeEndEffector;
 import frc.robot.subsystems.CoralEndEffector;
-import java.io.File;
-import java.util.jar.Attributes.Name;
-
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
 /**
@@ -45,6 +47,7 @@ public class RobotContainer
   private final SwerveSubsystem       m_drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
+  private final AlgaeEndEffector m_AlgaeEndEffector = new AlgaeEndEffector();
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
@@ -160,6 +163,7 @@ public class RobotContainer
                                 driveFieldOrientedAnglularVelocity :
                                 driveFieldOrientedAnglularVelocitySim);
     m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
+    m_AlgaeEndEffector.setDefaultCommand(m_AlgaeEndEffector.stopCommand());
 
     if (Robot.isSimulation())
     {
@@ -199,6 +203,14 @@ public class RobotContainer
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       shooterXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       shooterXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      shooterXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
+      shooterXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+Trigger leftJoystickUp = new Trigger(() -> shooterXbox.getLeftY()>0.25);
+leftJoystickUp.whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
+leftJoystickUp.onFalse(m_AlgaeEndEffector.stopCommand());
+Trigger leftJoystickDown = new Trigger(() -> shooterXbox.getLeftY()<0.25);
+leftJoystickDown.whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
+leftJoystickDown.onFalse(m_AlgaeEndEffector.stopCommand());
     }
 //check in with team about preference^ bumper preference for lock
     
@@ -231,5 +243,6 @@ public class RobotContainer
 public void periodic() {
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
+     SmartDashboard.putData(m_AlgaeEndEffector);
 }
 }

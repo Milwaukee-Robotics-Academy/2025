@@ -9,6 +9,12 @@
           "data": {
             "pathName": "M to P2 (STRAIGHT)"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtake"
+          }
         }
       ]
     }

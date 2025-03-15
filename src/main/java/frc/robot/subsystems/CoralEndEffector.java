@@ -45,6 +45,7 @@ public class CoralEndEffector extends SubsystemBase {
     motor_9_config
         .apply(global_config)
         .inverted(false);
+        //Invert when using Erik's robot //
     motor_10_config
         .apply(global_config)
         .inverted(true);
