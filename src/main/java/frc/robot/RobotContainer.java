@@ -41,8 +41,11 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandJoystick driverJoystick = new CommandJoystick(0);
-  final CommandXboxController driverXboxController = new CommandXboxController(0);
-  final CommandJoystick operatorJoystick = new CommandJoystick(1);
+  final CommandXboxController operatorXboxController = new CommandXboxController(1);
+  final CommandJoystick driverJoystick2 = new CommandJoystick(2);
+  //final CommandXboxController driverXboxController = new CommandXboxController(0);
+ // final CommandJoystick operatorJoystick = new CommandJoystick(1);
+  
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/fleetbot"));
@@ -54,9 +57,9 @@ public class RobotContainer {
    * by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverXboxController.getLeftY() * -1,
-      () -> driverXboxController.getRightX() * -1)
-     // .withControllerRotationAxis(() -> driverXboxController.getRightTriggerAxis()  - (driverXboxController.getLeftTriggerAxis()))
+      () -> driverJoystick.getY() * -1,
+      () -> driverJoystick2.getX() * -1)
+      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1);
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
@@ -65,9 +68,9 @@ public class RobotContainer {
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverXboxController.getLeftY(),
-      () -> driverXboxController.getLeftX())
-      .withControllerRotationAxis(() -> driverXboxController.getRightX() * -1)
+      () -> driverJoystick.getY(),
+      () -> driverJoystick2.getX())
+      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1)
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
 
@@ -122,17 +125,21 @@ public class RobotContainer {
       // coralLoaded.onTrue(m_CoralEndEffector.stopCommand()); */
     } else {
      // driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-     driverXboxController.leftBumper().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-      operatorJoystick.button(3).onTrue(m_CoralEndEffector.stopCommand());
-      operatorJoystick.button(2).whileTrue(m_CoralEndEffector.intakeCommand());
-      operatorJoystick.button(1).whileTrue(m_CoralEndEffector.outtakeCommand());
-      operatorJoystick.axisGreaterThan(1, 0.5).whileTrue(m_AlgaeManipulator.goUpFunctionCommand());
-      operatorJoystick.axisLessThan(1,-0.5).whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
-      operatorJoystick.button(11).onTrue(m_CoralEndEffector.outtakeAndStopCommand());
-      operatorJoystick.button(12).onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-      operatorJoystick.button(7).whileTrue(m_AlgaeManipulator.intakeCommand());
-      operatorJoystick.button(8).whileTrue(m_AlgaeManipulator.outtakeCommand());
-      operatorJoystick.button(9).onTrue(m_AlgaeManipulator.stopCommand());
+     driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+     operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+    operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
+     
+     
+     operatorXboxController.b().onTrue(m_CoralEndEffector.stopCommand());
+      operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+      operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
+      operatorXboxController.povUp().whileTrue(m_AlgaeManipulator.goUpFunctionCommand());
+      operatorXboxController.povDown().whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
+      operatorXboxController.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
+      operatorXboxController.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      operatorXboxController.x().whileTrue(m_AlgaeManipulator.intakeCommand());
+      operatorXboxController.a().whileTrue(m_AlgaeManipulator.outtakeCommand());
+      operatorXboxController.x().onFalse(m_AlgaeManipulator.stopCommand());
     }
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
