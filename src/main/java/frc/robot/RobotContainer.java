@@ -43,7 +43,7 @@ public class RobotContainer {
   final CommandJoystick driverJoystick = new CommandJoystick(0);
   final CommandXboxController operatorXboxController = new CommandXboxController(1);
   final CommandJoystick driverJoystick2 = new CommandJoystick(2);
-  //final CommandXboxController driverXboxController = new CommandXboxController(0);
+  final CommandXboxController driverXboxController = new CommandXboxController(0);
  // final CommandJoystick operatorJoystick = new CommandJoystick(1);
   
   // The robot's subsystems and commands are defined here...
@@ -56,23 +56,45 @@ public class RobotContainer {
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
    */
+
+   //Dual Sticks
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
       () -> driverJoystick.getY() * -1,
-      () -> driverJoystick2.getX() * -1)
-      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1);
+      () -> driverJoystick.getX() * -1)
+      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1)
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
-      .allianceRelativeControl(true);
+      .allianceRelativeControl(true); 
 
+
+      //Controller
+     /*  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
+      () -> driverXboxController.getLeftY() * -1,
+      () -> driverXboxController.getLeftX() * -1)
+      .withControllerRotationAxis(() -> driverXboxController.getLeftTriggerAxis() - driverXboxController.getRightTriggerAxis())
+      .deadband(OperatorConstants.DEADBAND)
+      .scaleTranslation(0.8)
+      .allianceRelativeControl(true);*/
 
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
+  //Dual Sticks
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
       () -> driverJoystick.getY(),
-      () -> driverJoystick2.getX())
+      () -> driverJoystick.getX())
       .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1)
       .deadband(OperatorConstants.DEADBAND)
-      .allianceRelativeControl(true);
+      .allianceRelativeControl(true); 
+
+
+  //Controller
+  /*  SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
+      () -> driverXboxController.getLeftY() * -1,
+      () -> driverXboxController.getLeftX() * -1)
+      .withControllerRotationAxis(() -> driverXboxController.getLeftTriggerAxis() - driverXboxController.getRightTriggerAxis())
+      .deadband(OperatorConstants.DEADBAND)
+      .scaleTranslation(0.8)
+      .allianceRelativeControl(true);*/
 
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
@@ -125,12 +147,13 @@ public class RobotContainer {
       // coralLoaded.onTrue(m_CoralEndEffector.stopCommand()); */
     } else {
      // driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-     driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+     driverJoystick2.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+     driverXboxController.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
      operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
     operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
      
-     
-     operatorXboxController.b().onTrue(m_CoralEndEffector.stopCommand());
+     operatorXboxController.b().onTrue(m_CoralEndEffector.operationNOCommand());
+     operatorXboxController.a().onTrue(m_CoralEndEffector.stopCommand());
       operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
       operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
       operatorXboxController.povUp().whileTrue(m_AlgaeManipulator.goUpFunctionCommand());
