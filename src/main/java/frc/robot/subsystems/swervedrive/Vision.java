@@ -315,8 +315,6 @@ public class Vision {
         poses.add(targetPose);
       }
     }
-
-    visionField.getObject("tracked targets").setPoses(poses);
   }
 
   /**
@@ -335,17 +333,17 @@ public class Vision {
     // /**
     //  * Right Camera
     //  */
-    // RIGHT_CAM("right",
-    //     new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-    //     new Translation3d(Units.inchesToMeters(12.056),
-    //         Units.inchesToMeters(-10.981),
-    //         Units.inchesToMeters(8.44)),
-    //     VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
+    LEFT_CAM("left",
+        new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
+        new Translation3d(Units.inchesToMeters(12.056),
+            Units.inchesToMeters(-10.981),
+            Units.inchesToMeters(8.44)),
+        VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Center Camera
      * TODO: RENAME to match actual camera name
      */
-    CENTER_CAM("center",
+    RIGHT_CAM("right",
         new Rotation3d(0, Units.degreesToRadians(0), 0),
         new Translation3d(Units.inchesToMeters(11),
             Units.inchesToMeters(9),
