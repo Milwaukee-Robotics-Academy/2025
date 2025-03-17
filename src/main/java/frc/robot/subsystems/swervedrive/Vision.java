@@ -21,28 +21,32 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision {
   private final PhotonCamera leftCammera;
-  private final PhotonPoseEstimator photonEstimator;
+  private PhotonCamera rightCammera;
+  private final PhotonPoseEstimator photonEstimatorLeft;
+  private final PhotonPoseEstimator photonEstimatorRight;
   private Matrix<N3, N1> curStdDevs;
 
-  public Vision() {
-    leftCammera = new PhotonCamera(kCameraNameLeft);
-
-    photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamLeft);
-    photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-
+  
+    public Vision() {
+      leftCammera = new PhotonCamera(kCameraNameLeft);
+      rightCammera = new PhotonCamera(kCameraNameRight);
+    photonEstimatorLeft = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamLeft);
+    photonEstimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamRight);
+    photonEstimatorRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
 
   public void updatePoseEstimation(SwerveDrive drive) {
     // Correct pose estimate with vision measurements
-    var poseEst = this.getEstimatedGlobalPoseFromLeft();
+    var poseEstLeft = this.getEstimatedGlobalPoseFromLeft();
 
-    poseEst.ifPresent(
+    poseEstLeft.ifPresent(
         est -> {
           // Change our trust in the measurement based on the tags we can see
           var estStdDevs = this.getEstimationStdDevs();
 
-          drive.addVisionMeasurement(
-              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+        //  drive.addVisionMeasurement(
+          //    est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           SmartDashboard.putNumber("VisionLeft/x", est.estimatedPose.getTranslation().getX());
           SmartDashboard.putNumber("VisionLeft/y", est.estimatedPose.getTranslation().getY());
           SmartDashboard.putNumber("VisionLeft/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
@@ -50,10 +54,28 @@ public class Vision {
           SmartDashboard.putNumber("VisionLeft/posetimestamp", est.timestampSeconds);
           SmartDashboard.putBoolean("VisionLeft/CurrentPose",true);
         });
-    if(poseEst.isEmpty()) {
+    if(poseEstLeft.isEmpty()) {
                 SmartDashboard.putBoolean("VisionLeft/CurrentPose", false);
     }
+    var poseEstRight = this.getEstimatedGlobalPoseFromRight();
 
+    poseEstRight.ifPresent(
+        est -> {
+          // Change our trust in the measurement based on the tags we can see
+          var estStdDevs = this.getEstimationStdDevs();
+
+          drive.addVisionMeasurement(
+              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          SmartDashboard.putNumber("VisionRight/x", est.estimatedPose.getTranslation().getX());
+          SmartDashboard.putNumber("VisionRight/y", est.estimatedPose.getTranslation().getY());
+          SmartDashboard.putNumber("VisionRight/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
+          SmartDashboard.putNumber("VisionRight/time", Timer.getFPGATimestamp());
+          SmartDashboard.putNumber("VisionRight/posetimestamp", est.timestampSeconds);
+          SmartDashboard.putBoolean("VisionRight/CurrentPose",true);
+        });
+    if(poseEstRight.isEmpty()) {
+                SmartDashboard.putBoolean("VisionRight/CurrentPose", false);
+    }
   }
 
   /**
@@ -73,22 +95,22 @@ public class Vision {
   public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromLeft() {
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
     for (var change : leftCammera.getAllUnreadResults()) {
-      visionEst = photonEstimator.update(change);
+      visionEst = photonEstimatorLeft.update(change);
       updateEstimationStdDevs(visionEst, change.getTargets());
 
     }
     return visionEst;
   }
 
-  //  public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromRight() {
-  //   Optional<EstimatedRobotPose> visionEst = Optional.empty();
-  //   for (var change : rightCammera.getAllUnreadResults()) {
-  //     visionEst = photonEstimator.update(change);
-  //     updateEstimationStdDevs(visionEst, change.getTargets());
+   public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromRight() {
+    Optional<EstimatedRobotPose> visionEst = Optional.empty();
+    for (var change : rightCammera.getAllUnreadResults()) {
+      visionEst = photonEstimatorRight.update(change);
+      updateEstimationStdDevs(visionEst, change.getTargets());
 
-  //   }
-  //   return visionEst;
-  // }
+    }
+    return visionEst;
+  }
 
   /**
    * Calculates new standard deviations This algorithm is a heuristic that creates
@@ -114,7 +136,7 @@ public class Vision {
       // Precalculation - see how many tags we found, and calculate an
       // average-distance metric
       for (var tgt : targets) {
-        var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+        var tagPose = photonEstimatorLeft.getFieldTags().getTagPose(tgt.getFiducialId());
         if (tagPose.isEmpty())
           continue;
         numTags++;
