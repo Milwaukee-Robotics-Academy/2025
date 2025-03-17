@@ -315,6 +315,9 @@ public class Vision {
         poses.add(targetPose);
       }
     }
+
+    field2d.getObject("tracked targets").setPoses(poses);
+
   }
 
   /**
