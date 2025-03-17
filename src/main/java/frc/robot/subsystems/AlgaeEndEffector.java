@@ -46,7 +46,9 @@ package frc.robot.subsystems;
      global_config
        .smartCurrentLimit(0)
        .idleMode(IdleMode.kBrake);
-     motor_11_config
+
+    // inverted controller so matches controller functions
+     motor_11_config.inverted(true)
        .apply(global_config);    
      motor_12_config
        .apply(global_config);
@@ -59,19 +61,19 @@ package frc.robot.subsystems;
    private void LockAlgae(){
      if (intakeState == intakeStates.LOCKED)
      {
-       double currentEncoderValue = m_encoder_11.getPosition();
+       double currentEncoderValue = m_encoder_12.getPosition();
        if(currentEncoderValue > encoderLockValue*1.02)
        {
-         m_motor_11.set(-.2);
+         m_motor_12.set(-.2);
        }
        else if (currentEncoderValue < encoderLockValue*1.02) 
        {
-         m_motor_11.set(.2);
+         m_motor_12.set(.2);
        }
      }
      else
      {
-       encoderLockValue = m_encoder_11.getPosition();
+       encoderLockValue = m_encoder_12.getPosition();
        intakeState = intakeStates.LOCKED;
      }
  
@@ -85,26 +87,26 @@ package frc.robot.subsystems;
  
    private void intake(){
      unlockAlgae();
-     m_motor_11.set(0.5);
+     m_motor_12.set(0.5);
    }
  
    private void stopIntake(){
-     m_motor_11.set(0);
+     m_motor_12.set(0);
    }
  
    private void outtake(){
      unlockAlgae();
-     m_motor_11.set(-0.5);
+     m_motor_12.set(-0.5);
    }
  
    private void raiseArm(){
-     m_motor_12.set(0.25);
+     m_motor_11.set(0.25);
    }
    public void stopArm(){
-    m_motor_12.set(0);
+    m_motor_11.set(0);
   }
   public void lowerArm(){
-    m_motor_12.set(-0.25);
+    m_motor_11.set(-0.25);
   }
 
   public Command lockAlgaeCommand(){
@@ -136,7 +138,7 @@ public Command stop2Command(){
 @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake Algae", m_encoder_11.getPosition());
+    SmartDashboard.putNumber("Intake Algae", m_encoder_12.getPosition());
     SmartDashboard.putNumber("Outtake Algae", m_encoder_12.getPosition());
 
   }

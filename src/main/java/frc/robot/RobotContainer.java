@@ -203,12 +203,14 @@ public class RobotContainer
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       shooterXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       shooterXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+
       shooterXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
       shooterXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+
 Trigger leftJoystickUp = new Trigger(() -> shooterXbox.getLeftY()>0.25);
 leftJoystickUp.whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
 leftJoystickUp.onFalse(m_AlgaeEndEffector.stopCommand());
-Trigger leftJoystickDown = new Trigger(() -> shooterXbox.getLeftY()<0.25);
+Trigger leftJoystickDown = new Trigger(() -> shooterXbox.getLeftY() < -0.25);
 leftJoystickDown.whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
 leftJoystickDown.onFalse(m_AlgaeEndEffector.stopCommand());
     }
