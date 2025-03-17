@@ -45,8 +45,8 @@ public class Vision {
           // Change our trust in the measurement based on the tags we can see
           var estStdDevs = this.getEstimationStdDevs();
 
-        //  drive.addVisionMeasurement(
-          //    est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          drive.addVisionMeasurement(
+              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           SmartDashboard.putNumber("VisionLeft/x", est.estimatedPose.getTranslation().getX());
           SmartDashboard.putNumber("VisionLeft/y", est.estimatedPose.getTranslation().getY());
           SmartDashboard.putNumber("VisionLeft/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
@@ -54,13 +54,13 @@ public class Vision {
           SmartDashboard.putNumber("VisionLeft/posetimestamp", est.timestampSeconds);
           SmartDashboard.putBoolean("VisionLeft/CurrentPose",true);
         });
-    if(poseEstLeft.isEmpty()) {
-                SmartDashboard.putBoolean("VisionLeft/CurrentPose", false);
-    }
+    // if(poseEstLeft.isEmpty()) {
+    //             SmartDashboard.putBoolean("VisionLeft/CurrentPose", false);
+    // }
     var poseEstRight = this.getEstimatedGlobalPoseFromRight();
 
     poseEstRight.ifPresent(
-        est -> {
+        est -> { 
           // Change our trust in the measurement based on the tags we can see
           var estStdDevs = this.getEstimationStdDevs();
 
