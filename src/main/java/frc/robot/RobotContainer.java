@@ -8,6 +8,7 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -131,6 +132,12 @@ public class RobotContainer {
       driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
       driverXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
       driverXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+      operatorXbox.rightBumper().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
+      operatorXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
+      operatorXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
+      operatorXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+      operatorXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      operatorXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
