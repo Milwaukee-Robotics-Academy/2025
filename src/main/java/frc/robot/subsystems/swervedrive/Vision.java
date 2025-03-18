@@ -7,6 +7,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.SwerveDrive;
@@ -34,9 +35,14 @@ public class Vision {
     photonEstimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamRight);
     photonEstimatorRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    SmartDashboard.putBoolean("Use Auto Vision?", true);
+    SmartDashboard.putBoolean("Use TelepOp Vision?", true);
   }
 
   public void updatePoseEstimation(SwerveDrive drive) {
+
+    if ((DriverStation.isTeleopEnabled() && SmartDashboard.getBoolean("Use TelepOp Vision?", false))||
+      DriverStation.isAutonomousEnabled() && SmartDashboard.getBoolean("Use Auto Vision?", false)){
     // Correct pose estimate with vision measurements
     var poseEstLeft = this.getEstimatedGlobalPoseFromLeft();
 
@@ -73,9 +79,7 @@ public class Vision {
           SmartDashboard.putNumber("VisionRight/posetimestamp", est.timestampSeconds);
           SmartDashboard.putBoolean("VisionRight/CurrentPose",true);
         });
-    //if(poseEstRight.isEmpty()) {
-      //          SmartDashboard.putBoolean("VisionRight/CurrentPose", false);
-    //}
+      }
   }
 
   /**
