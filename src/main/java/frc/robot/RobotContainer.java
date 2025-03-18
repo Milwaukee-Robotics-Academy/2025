@@ -8,6 +8,7 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.AlgaeManipulator;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
@@ -39,11 +41,12 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController operaterXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
-
+  private final AlgaeManipulator m_AlgaeManipulator = new AlgaeManipulator();
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
@@ -106,18 +109,22 @@ public class RobotContainer {
       driverXbox.button(1).whileTrue(m_drivebase.sysIdDriveMotorCommand());
       driverXbox.axisGreaterThan(2, 0.1).or(driverXbox.axisGreaterThan(3, 0.1)).whileTrue(
           new RunCommand(() -> {
-            m_drivebase.drive(new Translation2d(0, driverXbox.getLeftTriggerAxis() - driverXbox.getRightTriggerAxis()),
+            m_drivebase.drive(new Translation2d(0, driverXbox.getLeftTriggerAxis() -+ driverXbox.getRightTriggerAxis()),
                 0.0, false);
           }));
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
     } else {
       driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-      driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
-      driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
       driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
       driverXbox.back().whileTrue(Commands.none());
+      operaterXbox.b().whileTrue(m_CoralEndEffector.stopCommand());
+      operaterXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
+      operaterXbox.y().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase));
+      operaterXbox.leftBumper().whileTrue(m_AlgaeManipulator.goUpFunctionCommand());
+      operaterXbox.rightBumper().whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
+      operaterXbox.leftTrigger
+
+      
+
       // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock,
       // m_drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
