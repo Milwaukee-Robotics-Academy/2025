@@ -73,9 +73,9 @@ public class Vision {
           SmartDashboard.putNumber("VisionRight/posetimestamp", est.timestampSeconds);
           SmartDashboard.putBoolean("VisionRight/CurrentPose",true);
         });
-    if(poseEstRight.isEmpty()) {
-                SmartDashboard.putBoolean("VisionRight/CurrentPose", false);
-    }
+    //if(poseEstRight.isEmpty()) {
+      //          SmartDashboard.putBoolean("VisionRight/CurrentPose", false);
+    //}
   }
 
   /**

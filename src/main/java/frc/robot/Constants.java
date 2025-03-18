@@ -58,13 +58,13 @@ public final class Constants {
     // from center.
     public static final Transform3d kRobotToCamLeft = new Transform3d(
       new Translation3d(
-          Units.inchesToMeters(11), 
+          Units.inchesToMeters(11.75), 
           Units.inchesToMeters(9), 
           Units.inchesToMeters(8)),
       new Rotation3d(0, 0, Units.degreesToRadians(-16)));
     public static final Transform3d kRobotToCamRight = new Transform3d(
       new Translation3d(
-        Units.inchesToMeters(11), 
+        Units.inchesToMeters(11.75), 
         Units.inchesToMeters(-9), 
         Units.inchesToMeters(8)),
         new Rotation3d(0, 0, Units.degreesToRadians(16)));
@@ -75,7 +75,7 @@ public final class Constants {
     // correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 10);
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(5, 5, 10);
   }
 
   public static class OperatorConstants {
