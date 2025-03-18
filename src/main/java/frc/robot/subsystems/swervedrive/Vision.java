@@ -35,14 +35,12 @@ public class Vision {
     photonEstimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamRight);
     photonEstimatorRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-    SmartDashboard.putBoolean("Use Auto Vision?", true);
-    SmartDashboard.putBoolean("Use TelepOp Vision?", true);
+    SmartDashboard.putBoolean("Use Vision?", true);
   }
 
   public void updatePoseEstimation(SwerveDrive drive) {
 
-    if ((DriverStation.isTeleopEnabled() && SmartDashboard.getBoolean("Use TelepOp Vision?", false))||
-      DriverStation.isAutonomousEnabled() && SmartDashboard.getBoolean("Use Auto Vision?", false)){
+    if (SmartDashboard.getBoolean("Use Vision?", false)){
     // Correct pose estimate with vision measurements
     var poseEstLeft = this.getEstimatedGlobalPoseFromLeft();
 
@@ -51,8 +49,12 @@ public class Vision {
           // Change our trust in the measurement based on the tags we can see
           var estStdDevs = this.getEstimationStdDevs();
 
-          drive.addVisionMeasurement(
-              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          //checks if the values from vision are within field limits
+          if((est.estimatedPose.getTranslation().getY() > -0.05 && est.estimatedPose.getTranslation().getY() < 8.35) && 
+             (est.estimatedPose.getTranslation().getX() > -0.05 && est.estimatedPose.getTranslation().getX() < 20.0))
+          {
+            drive.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          }
           SmartDashboard.putNumber("VisionLeft/x", est.estimatedPose.getTranslation().getX());
           SmartDashboard.putNumber("VisionLeft/y", est.estimatedPose.getTranslation().getY());
           SmartDashboard.putNumber("VisionLeft/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
