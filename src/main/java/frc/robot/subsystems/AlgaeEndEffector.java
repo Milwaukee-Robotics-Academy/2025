@@ -102,11 +102,11 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_motor_12.set(0.25);
   }
 
-  public void stopArm(){
+  private void stopArm(){
     m_motor_12.set(0);
   }
 
-  public void lowerArm(){
+  private void lowerArm(){
     m_motor_12.set(-0.25);
   }
 

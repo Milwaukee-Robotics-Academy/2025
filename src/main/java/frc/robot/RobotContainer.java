@@ -41,7 +41,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController operatorXbox = new CommandXboxController(1);
+  final CommandXboxController operaterXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/fleetbot"));
@@ -112,17 +112,14 @@ public class RobotContainer {
       driverXbox.button(1).whileTrue(m_drivebase.sysIdDriveMotorCommand());
       driverXbox.axisGreaterThan(2, 0.1).or(driverXbox.axisGreaterThan(3, 0.1)).whileTrue(
           new RunCommand(() -> {
-            m_drivebase.drive(new Translation2d(0, driverXbox.getLeftTriggerAxis() - driverXbox.getRightTriggerAxis()),
+            m_drivebase.drive(new Translation2d(0, driverXbox.getLeftTriggerAxis() -+ driverXbox.getRightTriggerAxis()),
                 0.0, false);
           }));
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
     } else {
-      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       driverXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
       driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
+      driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, new Rotation2d().fromDegrees(143.03))));
       driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
       driverXbox.back().whileTrue(Commands.none());
     
