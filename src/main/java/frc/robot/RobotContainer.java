@@ -133,7 +133,7 @@ public class RobotContainer {
       driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
      // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
       driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
-      driverXbox.a().whileTrue(driveRobotCentric) ce
+      driverXbox.a().whileTrue(driveRobotCentric);
     
       // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock,
       // m_drivebase).repeatedly());
