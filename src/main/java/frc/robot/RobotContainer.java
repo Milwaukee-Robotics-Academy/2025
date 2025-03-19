@@ -198,12 +198,12 @@ public class RobotContainer
       //   
       driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
       shooterXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
+      shooterXbox.y().whileTrue(m_CoralEndEffector.reverseIntakeCommand());
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
       shooterXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       shooterXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-
       shooterXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
       shooterXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
 

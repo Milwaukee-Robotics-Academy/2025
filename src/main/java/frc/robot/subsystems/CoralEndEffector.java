@@ -63,13 +63,17 @@ private void intake(){
   m_motor_9.set(0.7);
   m_motor_10.set(0.7);
 }
+private void reverse(){
+  m_motor_9.set(-0.4);
+  m_motor_10.set(-0.4);
+}
 private void stop(){
   m_motor_9.set(0);
   m_motor_10.set(0);
 }
 private void outtake(){
-  m_motor_9.set(0.35);
-  m_motor_10.set(0.35);
+  m_motor_9.set(0.3);
+  m_motor_10.set(0.3);
 }
 
 private void nudgeForward(){
@@ -82,7 +86,9 @@ public Command intakeCommand(){
 public Command outtakeCommand(){
   return new RunCommand(this::outtake, this).withName("Outtake");
 }
-
+public Command reverseIntakeCommand(){
+  return new RunCommand(this::reverse, this).withName("Reverse");
+}
 public Command outtakeAndStopCommand(){
   return outtakeCommand()
   .until(() -> !this.acquired())
