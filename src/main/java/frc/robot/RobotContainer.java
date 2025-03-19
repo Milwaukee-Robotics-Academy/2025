@@ -26,6 +26,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.AlgaeEndEffector;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.Vision;
 import swervelib.SwerveInputStream;
 
 /**
@@ -46,6 +47,7 @@ public class RobotContainer {
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeEndEffector m_AlgaeEndEffector = new AlgaeEndEffector();
+  private final Vision m_vision;
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
@@ -69,6 +71,13 @@ public class RobotContainer {
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
 
+  SwerveInputStream driveRobotCentricInputStream = driveAngularVelocity.copy()
+  .robotRelative(true)
+  .allianceRelativeControl(false);
+
+  Command driveRobotCentric = m_drivebase.driveFieldOriented(driveRobotCentricInputStream);
+      
+      
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
   private SendableChooser<Command> autoChooser;
@@ -84,6 +93,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    m_vision = new Vision();   
   }
 
   /**
@@ -121,9 +131,9 @@ public class RobotContainer {
       driverXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
       driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
-      driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
+     // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
       driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
-      driverXbox.back().whileTrue(Commands.none());
+      driverXbox.a().whileTrue(driveRobotCentric);
     
       // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock,
       // m_drivebase).repeatedly());
@@ -154,7 +164,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    m_drivebase.periodic();
+    m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     SmartDashboard.putData(m_drivebase);
