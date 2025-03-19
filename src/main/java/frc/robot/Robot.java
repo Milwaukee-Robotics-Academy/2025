@@ -91,6 +91,7 @@ public class Robot extends TimedRobot
     {
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
+      disabledTimer.reset();
     }
   }
 
