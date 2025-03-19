@@ -21,16 +21,16 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision {
-  private final PhotonCamera leftCammera;
-  private PhotonCamera rightCammera;
+  private final PhotonCamera m_leftCammera;
+  private PhotonCamera m_rightCammera;
   private final PhotonPoseEstimator photonEstimatorLeft;
   private final PhotonPoseEstimator photonEstimatorRight;
   private Matrix<N3, N1> curStdDevs;
 
   
     public Vision() {
-      leftCammera = new PhotonCamera(kCameraNameLeft);
-      rightCammera = new PhotonCamera(kCameraNameRight);
+      m_leftCammera = new PhotonCamera(kCameraNameLeft);
+      m_rightCammera = new PhotonCamera(kCameraNameRight);
     photonEstimatorLeft = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamLeft);
     photonEstimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamRight);
@@ -40,49 +40,32 @@ public class Vision {
 
   public void updatePoseEstimation(SwerveDrive drive) {
 
-    if (SmartDashboard.getBoolean("Use Vision?", false)){
-    // Correct pose estimate with vision measurements
-    var poseEstLeft = this.getEstimatedGlobalPoseFromLeft();
-
-    poseEstLeft.ifPresent(
-        est -> {
-          // Change our trust in the measurement based on the tags we can see
-          var estStdDevs = this.getEstimationStdDevs();
-
-          //checks if the values from vision are within field limits
-          if((est.estimatedPose.getTranslation().getY() > -0.05 && est.estimatedPose.getTranslation().getY() < 8.35) && 
-             (est.estimatedPose.getTranslation().getX() > -0.05 && est.estimatedPose.getTranslation().getX() < 20.0))
-          {
-            drive.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-          }
-          SmartDashboard.putNumber("VisionLeft/x", est.estimatedPose.getTranslation().getX());
-          SmartDashboard.putNumber("VisionLeft/y", est.estimatedPose.getTranslation().getY());
-          SmartDashboard.putNumber("VisionLeft/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
-          SmartDashboard.putNumber("VisionLeft/time", Timer.getFPGATimestamp());
-          SmartDashboard.putNumber("VisionLeft/posetimestamp", est.timestampSeconds);
-          SmartDashboard.putBoolean("VisionLeft/CurrentPose",true);
-        });
-    // if(poseEstLeft.isEmpty()) {
-    //             SmartDashboard.putBoolean("VisionLeft/CurrentPose", false);
-    // }
-    var poseEstRight = this.getEstimatedGlobalPoseFromRight();
-
-    poseEstRight.ifPresent(
-        est -> { 
-          // Change our trust in the measurement based on the tags we can see
-          var estStdDevs = this.getEstimationStdDevs();
-
-          drive.addVisionMeasurement(
-              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-          SmartDashboard.putNumber("VisionRight/x", est.estimatedPose.getTranslation().getX());
-          SmartDashboard.putNumber("VisionRight/y", est.estimatedPose.getTranslation().getY());
-          SmartDashboard.putNumber("VisionRight/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
-          SmartDashboard.putNumber("VisionRight/time", Timer.getFPGATimestamp());
-          SmartDashboard.putNumber("VisionRight/posetimestamp", est.timestampSeconds);
-          SmartDashboard.putBoolean("VisionRight/CurrentPose",true);
-        });
-      }
+    if (SmartDashboard.getBoolean("Use Vision?", false)) {
+      // Correct pose estimate with vision measurements
+      processVisionEstimation(this.getEstimatedGlobalPoseFromLeft(), drive, "VisionLeft");
+      processVisionEstimation(this.getEstimatedGlobalPoseFromRight(), drive, "VisionRight");
+    }
   }
+
+  private void processVisionEstimation(Optional<EstimatedRobotPose> poseEst, SwerveDrive drive, String visionLabel) {
+    poseEst.ifPresent(est -> {
+      // Change our trust in the measurement based on the tags we can see
+      var estStdDevs = this.getEstimationStdDevs();
+
+      // Checks if the values from vision are within field limits
+      if ((est.estimatedPose.getTranslation().getY() > -0.05 && est.estimatedPose.getTranslation().getY() < 8.35) &&
+        (est.estimatedPose.getTranslation().getX() > -0.05 && est.estimatedPose.getTranslation().getX() < 20.0)) {
+        drive.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+      }
+      SmartDashboard.putNumber(visionLabel + "/x", est.estimatedPose.getTranslation().getX());
+      SmartDashboard.putNumber(visionLabel + "/y", est.estimatedPose.getTranslation().getY());
+      SmartDashboard.putNumber(visionLabel + "/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
+      SmartDashboard.putNumber(visionLabel + "/time", Timer.getFPGATimestamp());
+      SmartDashboard.putNumber(visionLabel + "/posetimestamp", est.timestampSeconds);
+      SmartDashboard.putBoolean(visionLabel + "/CurrentPose", true);
+    });
+  }
+  
 
   /**
    * The latest estimated robot pose on the field from vision data. This may be
@@ -94,28 +77,27 @@ public class Vision {
    * retrieved with
    * {@link getEstimationStdDevs}
    *
+   * @param camera The PhotonCamera to get the results from.
+   * @param estimator The PhotonPoseEstimator to update the pose.
    * @return An {@link EstimatedRobotPose} with an estimated pose, estimate
    *         timestamp, and targets
    *         used for estimation.
    */
-  public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromLeft() {
+  private Optional<EstimatedRobotPose> getEstimatedGlobalPose(PhotonCamera camera, PhotonPoseEstimator estimator) {
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
-    for (var change : leftCammera.getAllUnreadResults()) {
-      visionEst = photonEstimatorLeft.update(change);
+    for (var change : camera.getAllUnreadResults()) {
+      visionEst = estimator.update(change);
       updateEstimationStdDevs(visionEst, change.getTargets());
-
     }
     return visionEst;
   }
 
-   public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromRight() {
-    Optional<EstimatedRobotPose> visionEst = Optional.empty();
-    for (var change : rightCammera.getAllUnreadResults()) {
-      visionEst = photonEstimatorRight.update(change);
-      updateEstimationStdDevs(visionEst, change.getTargets());
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromLeft() {
+    return getEstimatedGlobalPose(m_leftCammera, photonEstimatorLeft);
+  }
 
-    }
-    return visionEst;
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromRight() {
+    return getEstimatedGlobalPose(m_rightCammera, photonEstimatorRight);
   }
 
   /**
