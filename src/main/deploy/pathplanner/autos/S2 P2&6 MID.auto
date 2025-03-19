@@ -29,6 +29,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Intake"
@@ -56,6 +62,12 @@
           "type": "path",
           "data": {
             "pathName": "Back to player"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {

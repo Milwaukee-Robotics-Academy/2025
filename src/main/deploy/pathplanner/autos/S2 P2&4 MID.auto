@@ -11,12 +11,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "MID TO RIGHT"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 0.05
@@ -25,13 +19,25 @@
         {
           "type": "named",
           "data": {
-            "name": "intake"
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID TO RIGHT"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.05
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
           }
         },
         {
