@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Coral Auto"
+            "pathName": "Blue Start to Blue Far Reef"
           }
         },
         {
@@ -23,15 +23,93 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Return to Loading station"
+            "pathName": "Blue Far Reef to Blue Load"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralAcquired"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Load to Center Near Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Near Reef to Blue Load"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralAcquired"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Load to Blue Near Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Near Reef to Blue Load"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralAcquired"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue Load to Blue Near Reef2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
           }
         }
       ]

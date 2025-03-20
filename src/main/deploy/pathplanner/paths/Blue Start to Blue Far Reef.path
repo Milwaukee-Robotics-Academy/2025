@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.432377049180327,
-        "y": 6.8481045081967205
+        "x": 7.181114754098361,
+        "y": 6.740934426229508
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.149692622950819,
-        "y": 6.836116803278688
+        "x": 6.174622254506052,
+        "y": 6.1276448688471135
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BlueStart"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 5.205788934426229
       },
       "prevControl": {
-        "x": 5.502356557377048,
-        "y": 6.392571721311475
+        "x": 5.780868776725482,
+        "y": 5.645134400688354
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BlueFarReef"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.46454101443547
+    "rotation": -150.9948816505305
   },
   "useDefaultConstraints": true
 }

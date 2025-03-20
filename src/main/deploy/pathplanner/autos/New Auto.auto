@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Coral Auto"
+            "pathName": "Blue Start to Blue Far Reef"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "outtakeAndStop"
           }
         }
       ]

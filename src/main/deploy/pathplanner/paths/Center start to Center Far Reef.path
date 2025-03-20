@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.15,
+        "x": 7.2,
         "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.937517930145068,
-        "y": 3.99780800680838
+        "x": 6.2457919859942725,
+        "y": 4.0
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 6.728003261609735,
-        "y": 4.0184261283733065
+        "x": 6.460259717208504,
+        "y": 4.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CeterFarReef"
     }
   ],
   "rotationTargets": [],
