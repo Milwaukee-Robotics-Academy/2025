@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L to P1"
+            "pathName": "L P1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "outtake"
+            "name": "Outtake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "P1 to CL"
+            "pathName": "P1 CL L"
           }
         },
         {
@@ -43,19 +43,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CL to P6"
+            "pathName": "CL P6 L"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "outtake"
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rebound to coral "
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "rebound the rebound"
           }
         }
       ]
