@@ -673,12 +673,12 @@ public class SwerveSubsystem extends SubsystemBase {
     Translation2d reefCenter;
     
     if(isRedAlliance()){
-      reefCenter = new Translation2d(Units.feetToMeters(27.0), Units.feetToMeters(3.0));
+      reefCenter = new Translation2d(4.7, 4.1);
     } else {
-      reefCenter = new Translation2d(Units.feetToMeters(27.0), Units.feetToMeters(21.0));
+      reefCenter = new Translation2d(13.2,4.1);
     }
-
-    return (getPose().getTranslation().getDistance(reefCenter) < Units.inchesToMeters(77));
+SmartDashboard.putNumber("Reef Center", getPose().getTranslation().getDistance(reefCenter));
+    return (getPose().getTranslation().getDistance(reefCenter) < 2.3);
   }
   public Trigger tooCloseToReefTrigger() {
 
