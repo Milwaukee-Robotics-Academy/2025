@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,9 +77,9 @@ public class RobotContainer {
   .allianceRelativeControl(false);
 
   Command driveRobotCentric = m_drivebase.driveFieldOriented(driveRobotCentricInputStream);
-      
-      
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
+
+  Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
 
   private SendableChooser<Command> autoChooser;
 
@@ -141,6 +142,8 @@ public class RobotContainer {
       driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
       driverXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
       driverXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+      tooCloseToReef.whileTrue(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 1)));
+      tooCloseToReef.whileFalse(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 0)));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
