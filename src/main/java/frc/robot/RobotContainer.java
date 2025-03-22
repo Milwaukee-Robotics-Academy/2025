@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Value;
+
 import java.io.File;
 import java.util.function.BooleanSupplier;
 
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -48,6 +51,7 @@ public class RobotContainer
                                                                                 "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeEndEffector m_AlgaeEndEffector = new AlgaeEndEffector();
+  //TODO: finish: Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
   // controls are front-left positive
@@ -213,7 +217,11 @@ leftJoystickUp.onFalse(m_AlgaeEndEffector.stopCommand());
 Trigger leftJoystickDown = new Trigger(() -> shooterXbox.getLeftY() < -0.25);
 leftJoystickDown.whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
 leftJoystickDown.onFalse(m_AlgaeEndEffector.stopCommand());
+//tooCloseToReef.whileTrue(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble,1)));
+//tooCloseToReef.whileFalse(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 0)));
     }
+
+    
 //check in with team about preference^ bumper preference for lock
     
 

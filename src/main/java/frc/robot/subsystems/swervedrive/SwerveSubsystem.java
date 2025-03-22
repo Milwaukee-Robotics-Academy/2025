@@ -29,14 +29,17 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -653,6 +656,21 @@ public class SwerveSubsystem extends SubsystemBase
                                                         angle.getRadians(),
                                                         getHeading().getRadians(),
                                                         Constants.MAX_SPEED);
+  }
+public boolean isRobotTooCloseToOpponentReef() {
+  Translation2d reefCenter;
+
+  if(isRedAlliance()){
+    reefCenter = new Translation2d(4.7, 4.1);
+  } else {
+    reefCenter = new Translation2d(13.2,4.1);
+  }
+  SmartDashboard.putNumber("Reef Center",getPose().getTranslation().getDistance(reefCenter));
+      return (getPose().getTranslation().getDistance(reefCenter) <2.3);
+  }
+  public Trigger tooCloseToReefTrigger() {
+
+      return new Trigger(this::isRobotTooCloseToOpponentReef);
   }
 
   /**
