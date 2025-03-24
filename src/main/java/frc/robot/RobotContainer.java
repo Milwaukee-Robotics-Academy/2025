@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.io.File;
+import java.util.concurrent.Semaphore;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -27,6 +28,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.AlgaeManipulator;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.Vision;
 import swervelib.SwerveInputStream;
 
 /**
@@ -51,7 +53,7 @@ public class RobotContainer {
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeManipulator m_AlgaeManipulator = new AlgaeManipulator();
-
+  private final Vision m_vision;
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
@@ -106,11 +108,15 @@ public class RobotContainer {
   public RobotContainer() {
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
     NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
+    NamedCommands.registerCommand("IntakewithSensor", m_CoralEndEffector.intakeWithSensorsCommand());
+    NamedCommands.registerCommand("IntakeAndStop", m_CoralEndEffector.IntakeAndStopCommand());
+    NamedCommands.registerCommand("Outtake", m_CoralEndEffector.outtakeCommand());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    m_vision = new Vision();
   }
 
   /**
@@ -134,19 +140,14 @@ public class RobotContainer {
     m_AlgaeManipulator.setDefaultCommand(m_AlgaeManipulator.stop2Command());
 
     if (Robot.isSimulation()) {
-    //  driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-     // driverXbox.button(1).whileTrue(m_drivebase.sysIdDriveMotorCommand());
-     /*  driverXbox.axisGreaterThan(2, 0.1).or(driverXbox.axisGreaterThan(3, 0.1)).whileTrue(
+     driverJoystick.povUp().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverJoystick.povDown().whileTrue(m_drivebase.sysIdDriveMotorCommand());
+       driverJoystick.axisGreaterThan(2, 0.1).or(driverJoystick.axisGreaterThan(3, 0.1)).whileTrue(
           new RunCommand(() -> {
-            m_drivebase.drive(new Translation2d(0, driverXbox.getLeftTriggerAxis() - driverXbox.getRightTriggerAxis()),
+            m_drivebase.drive(new Translation2d(0, driverJoystick.getX() -+ driverJoystick.getY()),
                 0.0, false);
           })); 
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      // coralLoaded.onTrue(m_CoralEndEffector.stopCommand()); */
     } else {
-     // driverJoystick.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
      driverJoystick2.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
      driverXboxController.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
      operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
@@ -163,17 +164,10 @@ public class RobotContainer {
       operatorXboxController.x().whileTrue(m_AlgaeManipulator.intakeCommand());
       operatorXboxController.a().whileTrue(m_AlgaeManipulator.outtakeCommand());
       operatorXboxController.x().onFalse(m_AlgaeManipulator.stopCommand());
-    }
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    // check in with team about preference^ bumper preference for lock
-// driverXbox.y().whileTrue(m_drivebase.driveToPose(new Pose2d(12.66, 3.07, new Rotation2d().fromDegrees(57.9))));
-      //driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, new Rotation2d().fromDegrees(143.03))));
-      //driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
-      //driverXbox.back().whileTrue(Commands.none());
-      // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock,
-      // m_drivebase).repeatedly());
+       autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    }
   }
 
   /**
@@ -191,8 +185,10 @@ public class RobotContainer {
 
   public void periodic() {
     m_drivebase.periodic();
+    m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
+    SmartDashboard.putData(m_AlgaeManipulator);
     SmartDashboard.putData(m_drivebase);
   }
 }

@@ -59,8 +59,8 @@ private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
     
   }
 private void intake(){
-  m_motor_9.set(0.5);
-  m_motor_10.set(0.5);
+  m_motor_9.set(0.4);
+  m_motor_10.set(0.2);
 }
 private void stop(){
   m_motor_9.set(0);
@@ -73,7 +73,7 @@ private void operationNO(){
 
 private void outtake(){
   m_motor_9.set(0.5);
-  m_motor_10.set(0.2);
+  m_motor_10.set(0.1);
 }
 
 private void nudgeForward(){
@@ -92,11 +92,19 @@ public Command outtakeCommand(){
 }
 
 public Command outtakeAndStopCommand(){
-  return operationNOCommand()
+  return this.outtakeCommand()
   .until(() -> !this.acquired())
   .andThen(stopCommand())
   .withName("OuttakeAndStop");
 }
+
+public Command IntakeAndStopCommand(){
+  return this.intakeCommand()
+  .until(() -> !this.acquired())
+  .andThen(stopCommand())
+  .withName("IntakeAndStop");
+}
+
 
 public Command nudgeForwardCommand(){
   return new RunCommand(this::nudgeForward, this).withName("nudge");
