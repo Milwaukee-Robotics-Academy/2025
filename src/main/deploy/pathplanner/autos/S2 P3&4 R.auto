@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "M to P2 (STRAIGHT)"
+            "pathName": "P3 R"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
           }
         },
         {
@@ -25,25 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MID TO LEF"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "left forward final"
+            "pathName": "P3 To CR R"
           }
         },
         {
@@ -55,37 +37,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
+            "name": "intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Back to player"
+            "pathName": "CR To P4 R"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CL P6 L"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
           }
         },
         {
