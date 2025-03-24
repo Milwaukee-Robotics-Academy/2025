@@ -61,13 +61,13 @@ public final class Constants {
           Units.inchesToMeters(11.75), 
           Units.inchesToMeters(9), 
           Units.inchesToMeters(8)),
-      new Rotation3d(0, 0, Units.degreesToRadians(-16)));
+      new Rotation3d(0, 0, Units.degreesToRadians(-15)));
     public static final Transform3d kRobotToCamRight = new Transform3d(
       new Translation3d(
         Units.inchesToMeters(-11.75), 
         Units.inchesToMeters(-9), 
         Units.inchesToMeters(8)),
-        new Rotation3d(0, 0, Units.degreesToRadians(164)));
+        new Rotation3d(0, 0, Units.degreesToRadians(172)));
     // The layout of the AprilTags on the field
     public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
