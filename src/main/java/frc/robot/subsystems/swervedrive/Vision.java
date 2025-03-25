@@ -21,20 +21,20 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision {
-  private final PhotonCamera m_leftCammera;
-  private PhotonCamera m_rightCammera;
-  private final PhotonPoseEstimator photonEstimatorLeft;
-  private final PhotonPoseEstimator photonEstimatorRight;
+  private final PhotonCamera m_backCammera;
+  private PhotonCamera m_frontCammera;
+  private final PhotonPoseEstimator photonEstimatorBack;
+  private final PhotonPoseEstimator photonEstimatorFront;
   private Matrix<N3, N1> curStdDevs;
 
   
     public Vision() {
-      m_leftCammera = new PhotonCamera(kCameraNameLeft);
-      m_rightCammera = new PhotonCamera(kCameraNameRight);
-    photonEstimatorLeft = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamLeft);
-    photonEstimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-    photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamRight);
-    photonEstimatorRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      m_backCammera = new PhotonCamera(kCameraNameBack);
+      m_frontCammera = new PhotonCamera(kCameraNameFront);
+    photonEstimatorBack = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamBack);
+    photonEstimatorBack.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    photonEstimatorFront = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamFront);
+    photonEstimatorFront.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     SmartDashboard.putBoolean("Use Vision?", true);
   }
 
@@ -42,8 +42,8 @@ public class Vision {
 
     if (SmartDashboard.getBoolean("Use Vision?", false)) {
       // Correct pose estimate with vision measurements
-      processVisionEstimation(this.getEstimatedGlobalPoseFromLeft(), drive, "VisionLeft");
-      processVisionEstimation(this.getEstimatedGlobalPoseFromRight(), drive, "VisionRight");
+      processVisionEstimation(this.getEstimatedGlobalPoseFromLeft(), drive, "VisionBack");
+      processVisionEstimation(this.getEstimatedGlobalPoseFromRight(), drive, "VisionFront");
     }
   }
 
@@ -91,11 +91,11 @@ public class Vision {
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromLeft() {
-    return getEstimatedGlobalPose(m_leftCammera, photonEstimatorLeft);
+    return getEstimatedGlobalPose(m_backCammera, photonEstimatorBack);
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFromRight() {
-    return getEstimatedGlobalPose(m_rightCammera, photonEstimatorRight);
+    return getEstimatedGlobalPose(m_frontCammera, photonEstimatorFront);
   }
 
   /**
@@ -122,7 +122,7 @@ public class Vision {
       // Precalculation - see how many tags we found, and calculate an
       // average-distance metric
       for (var tgt : targets) {
-        var tagPose = photonEstimatorLeft.getFieldTags().getTagPose(tgt.getFiducialId());
+        var tagPose = photonEstimatorBack.getFieldTags().getTagPose(tgt.getFiducialId());
         if (tagPose.isEmpty())
           continue;
         numTags++;

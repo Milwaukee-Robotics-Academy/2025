@@ -38,14 +38,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import java.io.File;
 import java.io.IOException;
-import java.security.Key;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
-import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -67,14 +64,8 @@ public class SwerveSubsystem extends SubsystemBase
    * AprilTag field layout.
    */
   private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
-  /**
-   * Enable vision odometry updates while driving.
-   */
-  private final boolean             visionDriveTest     = false;
-  /**
-   * PhotonVision class to keep an accurate odometry.
-   */
-  private       Vision              vision;
+
+ 
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -105,11 +96,7 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.setModuleEncoderAutoSynchronize(false,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
 //    swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
-    if (visionDriveTest)
-    {
-      // Stop the odometry thread if we are using vision that way we can synchronize updates better.
-      swerveDrive.stopOdometryThread();
-    }
+
     setupPathPlanner();
   }
 
@@ -133,7 +120,6 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
       swerveDrive.updateOdometry();
-      vision.updatePoseEstimation(swerveDrive);
       SmartDashboard.putNumber("Odometry/x", this.getPose().getTranslation().getX());
       SmartDashboard.putNumber("Odometry/y", this.getPose().getTranslation().getY());
       SmartDashboard.putNumber("Odometry/angle", this.getPose().getRotation().getDegrees());
@@ -695,14 +681,6 @@ public boolean isRobotTooCloseToOpponentReef() {
   public Rotation2d getPitch()
   {
     return swerveDrive.getPitch();
-  }
-
-  /**
-   * Add a fake vision reading for testing purposes.
-   */
-  public void addFakeVisionReading()
-  {
-    swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
   /**
