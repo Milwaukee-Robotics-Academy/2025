@@ -131,12 +131,12 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    // When vision is enabled we must manually update odometry in SwerveDrive
-    if (visionDriveTest)
-    {
+
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
-    }
+      SmartDashboard.putNumber("Odometry/x", this.getPose().getTranslation().getX());
+      SmartDashboard.putNumber("Odometry/y", this.getPose().getTranslation().getY());
+      SmartDashboard.putNumber("Odometry/angle", this.getPose().getRotation().getDegrees());
   }
 
   @Override

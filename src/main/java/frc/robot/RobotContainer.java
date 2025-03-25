@@ -258,6 +258,6 @@ tooCloseToReef.whileFalse(Commands.runOnce(() -> driverXbox.setRumble(RumbleType
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     SmartDashboard.putData(m_AlgaeEndEffector);
-    SmartDashboard.putData(m_AlgaeEndEffector);
+    SmartDashboard.putData(m_drivebase);
   }
 }

@@ -73,7 +73,7 @@ private void stop(){
 }
 private void outtake(){
   m_motor_9.set(0.25);
-  m_motor_10.set(0.2);
+  m_motor_10.set(0.25);
 }
 
 private void nudgeForward(){
