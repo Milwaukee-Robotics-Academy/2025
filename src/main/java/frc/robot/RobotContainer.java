@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import  edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -53,7 +54,7 @@ public class RobotContainer {
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeManipulator m_AlgaeManipulator = new AlgaeManipulator();
-  private final Vision m_vision;
+ // private final Vision m_vision;
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
@@ -61,9 +62,9 @@ public class RobotContainer {
 
    //Dual Sticks
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverJoystick.getY() * -1,
-      () -> driverJoystick.getX() * -1)
-      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1)
+      () -> driverJoystick.getY(),
+      () -> driverJoystick.getX())
+      .withControllerRotationAxis(() -> driverJoystick2.getZ())
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true); 
@@ -84,7 +85,7 @@ public class RobotContainer {
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
       () -> driverJoystick.getY(),
       () -> driverJoystick.getX())
-      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1)
+      .withControllerRotationAxis(() -> driverJoystick2.getZ())
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true); 
 
@@ -106,6 +107,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
     NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
     NamedCommands.registerCommand("IntakewithSensor", m_CoralEndEffector.intakeWithSensorsCommand());
@@ -116,7 +118,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    m_vision = new Vision();
+   // m_vision = new Vision();
   }
 
   /**
@@ -151,8 +153,7 @@ public class RobotContainer {
      driverJoystick2.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
      driverXboxController.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
      operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-    operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
-     
+     operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
      operatorXboxController.b().onTrue(m_CoralEndEffector.operationNOCommand());
      operatorXboxController.a().onTrue(m_CoralEndEffector.stopCommand());
       operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
@@ -164,9 +165,8 @@ public class RobotContainer {
       operatorXboxController.x().whileTrue(m_AlgaeManipulator.intakeCommand());
       operatorXboxController.a().whileTrue(m_AlgaeManipulator.outtakeCommand());
       operatorXboxController.x().onFalse(m_AlgaeManipulator.stopCommand());
-
-       autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //  autoChooser = AutoBuilder.buildAutoChooser();
+   // SmartDashboard.putData("Auto Chooser", autoChooser);
     }
   }
 
@@ -176,7 +176,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+return new WaitCommand(0);
   }
 
   public void setMotorBrake(boolean brake) {
@@ -185,7 +186,7 @@ public class RobotContainer {
 
   public void periodic() {
     m_drivebase.periodic();
-    m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
+   // m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     SmartDashboard.putData(m_AlgaeManipulator);

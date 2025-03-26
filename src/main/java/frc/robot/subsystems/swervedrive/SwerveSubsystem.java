@@ -68,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * PhotonVision class to keep an accurate odometry.
    */
-  private Vision vision;
+  //private Vision vision;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -105,14 +105,14 @@ public class SwerveSubsystem extends SubsystemBase {
     // swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used
     // over the internal encoder and push the offsets onto it. Throws warning if not
     // possible
-   // if (visionDriveTest) {
-    //  setupPhotonVision();
+    //if (visionDriveTest) {
+      //setupPhotonVision();
       // Stop the odometry thread if we are using vision that way we can synchronize
       // updates better.
     //  swerveDrive.stopOdometryThread();
-   // }
+    //}
    // setupPhotonVision();
-    setupPathPlanner();
+    //setupPathPlanner();
   }
 
   /**
@@ -131,19 +131,20 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /**
    * Setup the photon vision class.
-   */
-  /*public void setupPhotonVision() {
+  
+  public void setupPhotonVision() {
     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
-  }*/
+  }
+    */
 
   @Override
   public void periodic() {
     // When vision is enabled we must manually update odometry in SwerveDrive
-    if (visionDriveTest) {
-      swerveDrive.updateOdometry();
-      vision.updatePoseEstimation(swerveDrive);
-    }
-  //  vision.updatePoseEstimation(swerveDrive);
+    //if (visionDriveTest) {
+      //swerveDrive.updateOdometry();
+      //vision.updatePoseEstimation(swerveDrive);
+    //}
+    //vision.updatePoseEstimation(swerveDrive);
     SmartDashboard.putNumber("Odometry/x", this.getPose().getTranslation().getX()); 
     SmartDashboard.putNumber("Odometry/y", this.getPose().getTranslation().getY());
     SmartDashboard.putNumber("Odometry/angle", this.getPose().getRotation().getDegrees());
