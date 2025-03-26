@@ -27,13 +27,14 @@ public class Vision {
   private final PhotonPoseEstimator photonEstimatorRight;
   private Matrix<N3, N1> curStdDevs;
 
-  
-    public Vision() {
-      m_rearLeftCammera = new PhotonCamera(kCameraNameRearLeft);
-      m_frontRightCammera = new PhotonCamera(kCameraNameFrontRight);
-    photonEstimatorLeft = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToRearCamLeft);
+  public Vision() {
+    m_rearLeftCammera = new PhotonCamera(kCameraNameRearLeft);
+    m_frontRightCammera = new PhotonCamera(kCameraNameFrontRight);
+    photonEstimatorLeft = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+        kRobotToRearCamLeft);
     photonEstimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-    photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCamFrontRight);
+    photonEstimatorRight = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+        kRobotToCamFrontRight);
     photonEstimatorRight.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     SmartDashboard.putBoolean("Use Vision?", true);
   }
@@ -54,7 +55,7 @@ public class Vision {
 
       // Checks if the values from vision are within field limits
       if ((est.estimatedPose.getTranslation().getY() > -0.05 && est.estimatedPose.getTranslation().getY() < 8.35) &&
-        (est.estimatedPose.getTranslation().getX() > -0.05 && est.estimatedPose.getTranslation().getX() < 20.0)) {
+          (est.estimatedPose.getTranslation().getX() > -0.05 && est.estimatedPose.getTranslation().getX() < 20.0)) {
         drive.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
       }
       SmartDashboard.putNumber(visionLabel + "/x", est.estimatedPose.getTranslation().getX());
@@ -63,7 +64,6 @@ public class Vision {
       SmartDashboard.putNumber(visionLabel + "/posetimestamp", est.timestampSeconds);
     });
   }
-  
 
   /**
    * The latest estimated robot pose on the field from vision data. This may be
@@ -75,7 +75,7 @@ public class Vision {
    * retrieved with
    * {@link getEstimationStdDevs}
    *
-   * @param camera The PhotonCamera to get the results from.
+   * @param camera    The PhotonCamera to get the results from.
    * @param estimator The PhotonPoseEstimator to update the pose.
    * @return An {@link EstimatedRobotPose} with an estimated pose, estimate
    *         timestamp, and targets

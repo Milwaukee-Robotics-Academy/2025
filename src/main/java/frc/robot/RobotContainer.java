@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import  edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.AlgaeManipulator;
@@ -47,57 +47,63 @@ public class RobotContainer {
   final CommandXboxController operatorXboxController = new CommandXboxController(1);
   final CommandJoystick driverJoystick2 = new CommandJoystick(2);
   final CommandXboxController driverXboxController = new CommandXboxController(0);
- // final CommandJoystick operatorJoystick = new CommandJoystick(1);
-  
+  // final CommandJoystick operatorJoystick = new CommandJoystick(1);
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeManipulator m_AlgaeManipulator = new AlgaeManipulator();
- // private final Vision m_vision;
+  private final Vision m_vision = new Vision();
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
    * by angular velocity.
    */
 
-   //Dual Sticks
+  // Dual Sticks
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
       () -> driverJoystick.getY(),
       () -> driverJoystick.getX())
       .withControllerRotationAxis(() -> driverJoystick2.getZ())
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
-      .allianceRelativeControl(true); 
+      .allianceRelativeControl(true);
 
-
-      //Controller
-      /*  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverXboxController.getLeftY() * -1,
-      () -> driverXboxController.getLeftX() * -1)
-      .withControllerRotationAxis(() -> driverXboxController.getLeftTriggerAxis() - driverXboxController.getRightTriggerAxis())
-      .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(0.8)
-      .allianceRelativeControl(true);*/
+  // Controller
+  /*
+   * SwerveInputStream driveAngularVelocity =
+   * SwerveInputStream.of(m_drivebase.getSwerveDrive(),
+   * () -> driverXboxController.getLeftY() * -1,
+   * () -> driverXboxController.getLeftX() * -1)
+   * .withControllerRotationAxis(() -> driverXboxController.getLeftTriggerAxis() -
+   * driverXboxController.getRightTriggerAxis())
+   * .deadband(OperatorConstants.DEADBAND)
+   * .scaleTranslation(0.8)
+   * .allianceRelativeControl(true);
+   */
 
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
-  //Dual Sticks
+  // Dual Sticks
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
       () -> driverJoystick.getY(),
       () -> driverJoystick.getX())
       .withControllerRotationAxis(() -> driverJoystick2.getZ())
       .deadband(OperatorConstants.DEADBAND)
-      .allianceRelativeControl(true); 
+      .allianceRelativeControl(true);
 
-
-  //Controller
-  /*   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverXboxController.getLeftY() * -1,
-      () -> driverXboxController.getLeftX() * -1)
-      .withControllerRotationAxis(() -> driverXboxController.getLeftTriggerAxis() - driverXboxController.getRightTriggerAxis())
-      .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(0.8)
-      .allianceRelativeControl(true);*/
+  // Controller
+  /*
+   * SwerveInputStream driveAngularVelocitySim =
+   * SwerveInputStream.of(m_drivebase.getSwerveDrive(),
+   * () -> driverXboxController.getLeftY() * -1,
+   * () -> driverXboxController.getLeftX() * -1)
+   * .withControllerRotationAxis(() -> driverXboxController.getLeftTriggerAxis() -
+   * driverXboxController.getRightTriggerAxis())
+   * .deadband(OperatorConstants.DEADBAND)
+   * .scaleTranslation(0.8)
+   * .allianceRelativeControl(true);
+   */
 
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
@@ -118,7 +124,6 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-   // m_vision = new Vision();
   }
 
   /**
@@ -142,20 +147,21 @@ public class RobotContainer {
     m_AlgaeManipulator.setDefaultCommand(m_AlgaeManipulator.stop2Command());
 
     if (Robot.isSimulation()) {
-     driverJoystick.povUp().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverJoystick.povUp()
+          .onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
       driverJoystick.povDown().whileTrue(m_drivebase.sysIdDriveMotorCommand());
-       driverJoystick.axisGreaterThan(2, 0.1).or(driverJoystick.axisGreaterThan(3, 0.1)).whileTrue(
+      driverJoystick.axisGreaterThan(2, 0.1).or(driverJoystick.axisGreaterThan(3, 0.1)).whileTrue(
           new RunCommand(() -> {
-            m_drivebase.drive(new Translation2d(0, driverJoystick.getX() -+ driverJoystick.getY()),
+            m_drivebase.drive(new Translation2d(0, driverJoystick.getX() - +driverJoystick.getY()),
                 0.0, false);
-          })); 
+          }));
     } else {
-     driverJoystick2.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-     driverXboxController.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-     operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-     operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
-     operatorXboxController.b().onTrue(m_CoralEndEffector.operationNOCommand());
-     operatorXboxController.a().onTrue(m_CoralEndEffector.stopCommand());
+      driverJoystick2.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+      driverXboxController.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+      operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+      operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
+      operatorXboxController.b().onTrue(m_CoralEndEffector.operationNOCommand());
+      operatorXboxController.a().onTrue(m_CoralEndEffector.stopCommand());
       operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
       operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
       operatorXboxController.povUp().whileTrue(m_AlgaeManipulator.goUpFunctionCommand());
@@ -165,8 +171,8 @@ public class RobotContainer {
       operatorXboxController.x().whileTrue(m_AlgaeManipulator.intakeCommand());
       operatorXboxController.a().whileTrue(m_AlgaeManipulator.outtakeCommand());
       operatorXboxController.x().onFalse(m_AlgaeManipulator.stopCommand());
-    //  autoChooser = AutoBuilder.buildAutoChooser();
-   // SmartDashboard.putData("Auto Chooser", autoChooser);
+      // autoChooser = AutoBuilder.buildAutoChooser();
+      // SmartDashboard.putData("Auto Chooser", autoChooser);
     }
   }
 
@@ -176,8 +182,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return autoChooser.getSelected();
-return new WaitCommand(0);
+    // return autoChooser.getSelected();
+    return new WaitCommand(0);
   }
 
   public void setMotorBrake(boolean brake) {
@@ -186,7 +192,7 @@ return new WaitCommand(0);
 
   public void periodic() {
     m_drivebase.periodic();
-   // m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
+    m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     SmartDashboard.putData(m_AlgaeManipulator);

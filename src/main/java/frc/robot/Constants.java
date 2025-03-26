@@ -72,9 +72,6 @@ public static class Vision {
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(5, 5, 20);
   }
 
-
-
-
   public static final class DrivebaseConstants
   {
 
