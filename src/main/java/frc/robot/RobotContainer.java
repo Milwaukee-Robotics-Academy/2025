@@ -171,8 +171,8 @@ public class RobotContainer {
       operatorXboxController.x().whileTrue(m_AlgaeManipulator.intakeCommand());
       operatorXboxController.a().whileTrue(m_AlgaeManipulator.outtakeCommand());
       operatorXboxController.x().onFalse(m_AlgaeManipulator.stopCommand());
-      // autoChooser = AutoBuilder.buildAutoChooser();
-      // SmartDashboard.putData("Auto Chooser", autoChooser);
+      autoChooser = AutoBuilder.buildAutoChooser();
+      SmartDashboard.putData("Auto Chooser", autoChooser);
     }
   }
 
@@ -182,8 +182,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return autoChooser.getSelected();
-    return new WaitCommand(0);
+    return autoChooser.getSelected();
+    //return new WaitCommand(0);
   }
 
   public void setMotorBrake(boolean brake) {
