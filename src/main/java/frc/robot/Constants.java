@@ -56,13 +56,13 @@ public final class Constants {
     public static final String kCameraNameFrontRight = "Arducam_OV9782_USB_Camera (1)";
     // Cam mounted facing forward, 11 inches forward of center, 9 inches left of center, 8 inches up
     // from center.
-    public static final Transform3d kRobotToCamLeft = new Transform3d(
+    public static final Transform3d kRobotToRearCamLeft = new Transform3d(
       new Translation3d(
           Units.inchesToMeters(11.75), 
           Units.inchesToMeters(9), 
           Units.inchesToMeters(8)),
       new Rotation3d(0, 0, Units.degreesToRadians(-16)));
-    public static final Transform3d kRobotToCamRight = new Transform3d(
+    public static final Transform3d kRobotToCamFrontRight = new Transform3d(
       new Translation3d(
         Units.inchesToMeters(-11.75), 
         Units.inchesToMeters(-9), 
