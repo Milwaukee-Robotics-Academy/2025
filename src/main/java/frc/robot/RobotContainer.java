@@ -62,9 +62,9 @@ public class RobotContainer {
 
   // Dual Sticks
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverJoystick.getY(),
-      () -> driverJoystick.getX())
-      .withControllerRotationAxis(() -> driverJoystick2.getZ())
+      () -> driverJoystick.getY() * -1,
+      () -> driverJoystick.getX() * -1)
+      .withControllerRotationAxis(() -> driverJoystick2.getZ() * -1)
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
