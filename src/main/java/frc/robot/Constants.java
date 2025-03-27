@@ -52,8 +52,8 @@ public final class Constants {
 
   public static class Vision {
 
-    public static final String kCameraNameLeft = "Arducam_OV9782_USB_Camera";
-    public static final String kCameraNameRight = "Arducam_OV9782_USB_Camera (1)";
+    public static final String kCameraNameRearLeft = "Arducam_OV9782_USB_Camera";
+    public static final String kCameraNameFrontRight = "Arducam_OV9782_USB_Camera (1)";
     // Cam mounted facing forward, 11 inches forward of center, 9 inches left of center, 8 inches up
     // from center.
     public static final Transform3d kRobotToCamLeft = new Transform3d(
@@ -69,7 +69,7 @@ public final class Constants {
         Units.inchesToMeters(8)),
         new Rotation3d(0, 0, Units.degreesToRadians(164)));
     // The layout of the AprilTags on the field
-    public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
     // The standard deviations of our vision estimated poses, which affect
     // correction rate

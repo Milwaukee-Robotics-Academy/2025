@@ -13,25 +13,43 @@
         {
           "type": "named",
           "data": {
-            "name": "test"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "outtakeAndStop"
+            "name": "IntakeAndStop"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.5
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Return to Loading station"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakewithSensor"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "left load to center rear"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeAndStop"
           }
         }
       ]
