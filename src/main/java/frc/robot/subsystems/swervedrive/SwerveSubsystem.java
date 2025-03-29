@@ -118,11 +118,9 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-
-      swerveDrive.updateOdometry();
-      SmartDashboard.putNumber("Odometry/x", this.getPose().getTranslation().getX());
-      SmartDashboard.putNumber("Odometry/y", this.getPose().getTranslation().getY());
-      SmartDashboard.putNumber("Odometry/angle", this.getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Odometry/x", this.getPose().getTranslation().getX()); 
+    SmartDashboard.putNumber("Odometry/y", this.getPose().getTranslation().getY());
+    SmartDashboard.putNumber("Odometry/angle", this.getPose().getRotation().getDegrees());
   }
 
   @Override
