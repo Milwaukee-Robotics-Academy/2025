@@ -52,8 +52,8 @@ public final class Constants {
 
   public static class Vision {
 
-    public static final String kCameraNameRearLeft = "Arducam_OV9281_USB_Camera";
-    public static final String kCameraNameFrontRight = "Arducam_OV9281_USB_Camera (1)";
+    public static final String kCameraNameRearLeft = "Arducam_OV9281_USB_Camera (1)";
+    public static final String kCameraNameFrontRight = "Arducam_OV9281_USB_Camera";
     // Cam mounted facing forward, 11 inches forward of center, 9 inches left of center, 8 inches up
     // from center.
     public static final Transform3d kRobotToRearCamLeft = new Transform3d(
@@ -61,13 +61,13 @@ public final class Constants {
           Units.inchesToMeters(11.75), 
           Units.inchesToMeters(9), 
           Units.inchesToMeters(8)),
-      new Rotation3d(0, 0, Units.degreesToRadians(-16)));
+      new Rotation3d(0, 0, Units.degreesToRadians(164)));
     public static final Transform3d kRobotToCamFrontRight = new Transform3d(
       new Translation3d(
         Units.inchesToMeters(-11.75), 
         Units.inchesToMeters(-9), 
         Units.inchesToMeters(8)),
-        new Rotation3d(0, 0, Units.degreesToRadians(164)));
+        new Rotation3d(0, 0, Units.degreesToRadians(16)));
     // The layout of the AprilTags on the field
     public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 

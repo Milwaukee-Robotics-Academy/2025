@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Side Auto (p1)"
+            "pathName": "Right Side Auto (p1)"
           }
         },
         {
@@ -17,9 +17,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Left Side Auto (p2)"
+            "pathName": "Right Side Auto (p2)"
           }
         },
         {
@@ -29,9 +35,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Left Side Auto (p3)"
+            "pathName": "Right Side Auto (p3)"
           }
         },
         {

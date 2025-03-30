@@ -157,20 +157,18 @@ public class RobotContainer {
           }));
     } else {
       driverJoystick2.button(1).onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
-      driverXboxController.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
-      operatorXboxController.b().onTrue(m_CoralEndEffector.operationNOCommand());
+      operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.operationNOCommand());
       operatorXboxController.a().onTrue(m_CoralEndEffector.stopCommand());
       operatorXboxController.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
-      operatorXboxController.rightTrigger().whileTrue(m_CoralEndEffector.outtakeCommand());
       operatorXboxController.povUp().whileTrue(m_AlgaeManipulator.goUpFunctionCommand());
       operatorXboxController.povDown().whileTrue(m_AlgaeManipulator.goDownFunctionCommand());
       operatorXboxController.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
       operatorXboxController.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
       operatorXboxController.x().whileTrue(m_AlgaeManipulator.intakeCommand());
-      operatorXboxController.a().whileTrue(m_AlgaeManipulator.outtakeCommand());
+      operatorXboxController.b().whileTrue(m_AlgaeManipulator.outtakeCommand());
       operatorXboxController.x().onFalse(m_AlgaeManipulator.stopCommand());
+      operatorXboxController.b().onFalse(m_AlgaeManipulator.stopCommand());
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
     }
