@@ -11,27 +11,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeAndStop"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Right Side Auto (p2)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakewithSensor"
           }
         },
         {
@@ -44,12 +32,6 @@
           "type": "path",
           "data": {
             "pathName": "Right Side Auto (p3)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeAndStop"
           }
         }
       ]

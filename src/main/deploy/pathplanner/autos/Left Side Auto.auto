@@ -11,9 +11,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "IntakeAndStop"
+            "waitTime": 1.0
           }
         },
         {
@@ -23,21 +23,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "IntakewithSensor"
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Left Side Auto (p3)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeAndStop"
           }
         }
       ]
