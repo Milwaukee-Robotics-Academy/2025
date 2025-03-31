@@ -72,8 +72,8 @@ private void outtake(){
 }
 
 private void spitback(){
-  m_motor_9.set(-0.5);
-  m_motor_10.set(-0.5);
+  m_motor_9.set(-0.25);
+  m_motor_10.set(-0.25);
 }
 private void nudgeForward(){
   m_motor_9.set(0.1);
@@ -89,7 +89,7 @@ public Command outtakeCommand(){
   return new RunCommand(this::outtake, this).withName("Outtake");
 }
 
-public Command outtakeAndStopCommand(){
+public Command OuttakeAndStopCommand(){
   return outtakeCommand()
   .until(() -> !this.acquired())
   .andThen(stopCommand())

@@ -13,7 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "OuttakeAndStop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1coral - left loading"
           }
         }
       ]

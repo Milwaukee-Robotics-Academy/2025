@@ -41,7 +41,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController operaterXbox = new CommandXboxController(0);
+  final CommandXboxController operatorXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve/fleetbot"));
@@ -55,7 +55,7 @@ public class RobotContainer {
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
       () -> driverXbox.getLeftY() * -1,
       () -> driverXbox.getLeftX() * -1)
-      .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)
+      .withControllerRotationAxis(() -> driverXbox.getRightX())
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
@@ -64,9 +64,9 @@ public class RobotContainer {
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
   SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(m_drivebase.getSwerveDrive(),
-      () -> driverXbox.getLeftY(),
-      () -> driverXbox.getLeftX())
-      .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)
+      () -> driverXbox.getLeftY() * -1,
+      () -> driverXbox.getLeftX() * -1)
+      .withControllerRotationAxis(() -> driverXbox.getRightX())
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
 
@@ -79,7 +79,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
+    NamedCommands.registerCommand("OuttakeAndStop", m_CoralEndEffector.OuttakeAndStopCommand());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     // Configure the trigger bindings
@@ -116,25 +116,21 @@ public class RobotContainer {
                 0.0, false);
           }));
     } else {
-      driverXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-      driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
-      driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, new Rotation2d().fromDegrees(143.03))));
+      
+      driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
       driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
       driverXbox.back().whileTrue(Commands.none());
     
       // driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock,
       // m_drivebase).repeatedly());
-      driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
-      driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
-      driverXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
-      driverXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+    
       operatorXbox.rightBumper().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
       operatorXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
       operatorXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
       operatorXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
       operatorXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
       operatorXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
+      operatorXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 

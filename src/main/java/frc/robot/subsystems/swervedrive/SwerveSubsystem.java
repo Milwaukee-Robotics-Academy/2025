@@ -142,7 +142,7 @@ public class SwerveSubsystem extends SubsystemBase {
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
-    vision.updatePoseEstimation(swerveDrive);
+   // vision.updatePoseEstimation(swerveDrive);
     SmartDashboard.putNumber("Odometry/x", this.getPose().getTranslation().getX()); 
     SmartDashboard.putNumber("Odometry/y", this.getPose().getTranslation().getY());
     SmartDashboard.putNumber("Odometry/angle", this.getPose().getRotation().getDegrees());
@@ -582,7 +582,7 @@ public class SwerveSubsystem extends SubsystemBase {
     if (isRedAlliance()) {
       zeroGyro();
       // Set the pose 180 degrees
-      resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180)));
+      resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(0)));
     } else {
       zeroGyro();
     }
