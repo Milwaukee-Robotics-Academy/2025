@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +48,8 @@ public class RobotContainer {
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeEndEffector m_AlgaeEndEffector = new AlgaeEndEffector();
+
+  Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
@@ -134,7 +137,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    // check in with team about preference^ bumper preference for lock
+    tooCloseToReef.whileTrue(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble,1)));
+    tooCloseToReef.whileFalse(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 0)));
 
   }
 

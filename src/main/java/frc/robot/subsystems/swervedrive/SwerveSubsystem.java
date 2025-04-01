@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
@@ -717,4 +718,20 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveDrive getSwerveDrive() {
     return swerveDrive;
   }
+
+  public boolean isRobotTooCloseToOpponentReef() {
+    Translation2d reefCenter;
+  
+    if(isRedAlliance()){
+      reefCenter = new Translation2d(4.7, 4.1);
+    } else {
+      reefCenter = new Translation2d(13.2,4.1);
+    }
+    SmartDashboard.putNumber("Reef Center",getPose().getTranslation().getDistance(reefCenter));
+        return (getPose().getTranslation().getDistance(reefCenter) <2.3);
+    }
+    public Trigger tooCloseToReefTrigger() {
+  
+        return new Trigger(this::isRobotTooCloseToOpponentReef);
+    }
 }
