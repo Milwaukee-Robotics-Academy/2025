@@ -28,6 +28,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.AlgaeEndEffector;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.Vision;
 import swervelib.SwerveInputStream;
 
 /**
@@ -48,6 +49,7 @@ public class RobotContainer {
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeEndEffector m_AlgaeEndEffector = new AlgaeEndEffector();
+  private final Vision m_vision;
 
   Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
 
@@ -81,6 +83,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    m_vision = new Vision();
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
     NamedCommands.registerCommand("OuttakeAndStop", m_CoralEndEffector.OuttakeAndStopCommand());
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -158,7 +162,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    m_drivebase.periodic();
+    m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     SmartDashboard.putData(m_drivebase);
