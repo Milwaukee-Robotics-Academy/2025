@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Coral Auto"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "test"
+            "pathName": "Left To Reef"
           }
         },
         {
@@ -23,15 +17,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Return to Loading station"
+            "pathName": "Reef To left hp"
           }
         }
       ]

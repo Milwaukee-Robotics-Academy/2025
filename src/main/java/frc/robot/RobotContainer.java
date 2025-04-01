@@ -56,9 +56,9 @@ public class RobotContainer {
       () -> driverXbox.getLeftX() * -1)
       .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)
       .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(0.8)
+      .scaleTranslation(0.6)
       .allianceRelativeControl(true);
-
+  
 
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
@@ -117,7 +117,7 @@ public class RobotContainer {
         driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
         driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
       } else {
-        // driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
+         driverXbox.a().onTrue((Commands.runOnce(m_drivebase::zeroGyroWithAlliance)));
         // driverXbox.b().onTrue(m_CoralEndEffector.stopCommand());
         // driverXbox.x().whileTrue(m_CoralEndEffector.intakeCommand());
         // driverXbox.y().whileTrue(m_drivebase.driveToPose(new Pose2d(12.66, 3.07, new Rotation2d().fromDegrees(57.9))));
@@ -128,15 +128,19 @@ public class RobotContainer {
         // // m_drivebase).repeatedly());
         // driverXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
         // driverXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-        driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
+        /*driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
         driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
         driverXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
-        driverXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
-        operatorXbox.rightBumper().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
-      operatorXbox.leftBumper().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
+        driverXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());*/
+        operatorXbox.povUp().whileTrue(m_AlgaeEndEffector.goUpFunctionCommand());
+        operatorXbox.povUp().onFalse(m_AlgaeEndEffector.stop2Command());
+        operatorXbox.povDown().whileTrue(m_AlgaeEndEffector.goDownFunctionCommand());
+        operatorXbox.povDown().onFalse(m_AlgaeEndEffector.stop2Command());
+        operatorXbox.rightBumper().onTrue(m_CoralEndEffector.outtakeAndStopCommand());
+      operatorXbox.leftBumper().onTrue(m_CoralEndEffector.intakeWithSensorsCommand());
       operatorXbox.leftTrigger().whileTrue(m_AlgaeEndEffector.intakeCommand());
       operatorXbox.rightTrigger().whileTrue(m_AlgaeEndEffector.outtakeCommand());
-      operatorXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      operatorXbox.a().whileTrue(m_AlgaeEndEffector.stopCommand());
     //  operatorXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
     }
     autoChooser = AutoBuilder.buildAutoChooser();
