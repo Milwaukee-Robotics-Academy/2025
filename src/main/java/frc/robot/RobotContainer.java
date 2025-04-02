@@ -147,15 +147,16 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("outtake", m_CoralEndEffector.outtakeAndStopCommand());
+    NamedCommands.registerCommand("intake", m_CoralEndEffector.intakeWithSensorsCommand());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     m_vision = new Vision();
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("outtake", m_CoralEndEffector.outtakeAndStopCommand());
-    NamedCommands.registerCommand("intake", m_CoralEndEffector.intakeWithSensorsCommand());
+
   }
 
   /**

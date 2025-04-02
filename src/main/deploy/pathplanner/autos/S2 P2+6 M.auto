@@ -19,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
+            "name": "outtake"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "intake"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
+            "name": "outtake"
           }
         },
         {
@@ -73,7 +73,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "intake"
           }
         }
       ]
