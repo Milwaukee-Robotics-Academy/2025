@@ -60,7 +60,7 @@ public class Vision {
       SmartDashboard.putNumber(visionLabel + "/x", est.estimatedPose.getTranslation().getX());
       SmartDashboard.putNumber(visionLabel + "/y", est.estimatedPose.getTranslation().getY());
       SmartDashboard.putNumber(visionLabel + "/angle", est.estimatedPose.toPose2d().getRotation().getDegrees());
-      SmartDashboard.putNumber(visionLabel + "/posetimestamp", est.timestampSeconds);
+      //SmartDashboard.putNumber(visionLabel + "/posetimestamp", est.timestampSeconds);
     });
   }
   
