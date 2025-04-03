@@ -11,9 +11,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "IntakeAndStop"
           }
         },
         {
@@ -23,15 +23,45 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "IntakewithSensor"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Left Side Auto (p3)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeAndStop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Side Auto (p4)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakewithSensor"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Auto (p5)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeAndStop"
           }
         }
       ]

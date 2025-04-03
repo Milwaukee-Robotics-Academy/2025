@@ -58,13 +58,13 @@ public final class Constants {
     // from center.
     public static final Transform3d kRobotToRearCamLeft = new Transform3d(
       new Translation3d(
-          Units.inchesToMeters(11.75), 
+          Units.inchesToMeters(-11.75), 
           Units.inchesToMeters(9), 
           Units.inchesToMeters(8)),
       new Rotation3d(0, 0, Units.degreesToRadians(164)));
     public static final Transform3d kRobotToCamFrontRight = new Transform3d(
       new Translation3d(
-        Units.inchesToMeters(-11.75), 
+        Units.inchesToMeters(11.75), 
         Units.inchesToMeters(-9), 
         Units.inchesToMeters(8)),
         new Rotation3d(0, 0, Units.degreesToRadians(16)));
