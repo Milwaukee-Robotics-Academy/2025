@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P3 L"
+            "pathName": "L P3"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P3 To CR R"
+            "pathName": "P3 CL"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CR To P4 R"
+            "pathName": "CR P4"
           }
         },
         {
