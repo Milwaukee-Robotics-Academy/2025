@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.8220000000000005,
-        "y": 5.1365
+        "x": 4.00389344262295,
+        "y": 4.954047131147541
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.205638771901076,
-        "y": 5.5969307792352305
+        "x": 3.9334057377049163,
+        "y": 6.387217213114754
       },
       "isLocked": false,
       "linkedName": "reef pos 6"
     },
     {
       "anchor": {
-        "x": 1.21875,
-        "y": 7.0475
+        "x": 0.9949795081967214,
+        "y": 7.243698770491803
       },
       "prevControl": {
-        "x": 1.8553176016167048,
-        "y": 6.562898824479452
+        "x": 2.562012295081967,
+        "y": 6.91227868852459
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -55.98065001017353
+    "rotation": -36.98925202480187
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -61.49346243200765
+    "rotation": -86.63353933657028
   },
   "useDefaultConstraints": true
 }

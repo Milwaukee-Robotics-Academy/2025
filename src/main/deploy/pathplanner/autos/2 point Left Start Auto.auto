@@ -27,6 +27,18 @@
           "data": {
             "name": "intakeAndStop"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": " left hp To reef "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
+          }
         }
       ]
     }

@@ -58,7 +58,7 @@ public class RobotContainer {
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.6)
       .allianceRelativeControl(true);
-  
+
 
   Command driveFieldOrientedAnglularVelocity = m_drivebase.driveFieldOriented(driveAngularVelocity);
 
@@ -79,6 +79,7 @@ public class RobotContainer {
     public RobotContainer() {
       NamedCommands.registerCommand("test", Commands.print("I EXIST"));
       NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
+      NamedCommands.registerCommand("intakeAndStop", m_CoralEndEffector.intakeWithSensorsCommand());
       SmartDashboard.putData(CommandScheduler.getInstance());
       SmartDashboard.putData(m_CoralEndEffector);
       // Configure the trigger bindings

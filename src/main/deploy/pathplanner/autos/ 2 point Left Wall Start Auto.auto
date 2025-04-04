@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left To Reef"
+            "pathName": " Left wall To Reef"
           }
         },
         {
@@ -20,6 +20,30 @@
           "type": "path",
           "data": {
             "pathName": "Reef To left hp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeAndStop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": " left hp To reef "
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndStop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "reef to coral 2"
           }
         },
         {
