@@ -7,31 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Side Auto (p1)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Side Auto (p2)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Side Auto (p3)"
+            "pathName": "Out of the Way"
           }
         }
       ]
