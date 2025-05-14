@@ -26,58 +26,52 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class CoralEndEffector extends SubsystemBase {
-  private SparkMax m_motor_9;
-  private SparkMax m_motor_10;
+  private SparkMax m_leftMotor;
+  private SparkMax m_rightMotor;
  
-private TimeOfFlight intakeSensor = new TimeOfFlight(0);
-private TimeOfFlight acquiredSensor = new TimeOfFlight(1);
+private TimeOfFlight m_intakeSensor = new TimeOfFlight(0);
+private TimeOfFlight m_acquiredSensor = new TimeOfFlight(1);
 
   /** Creates a new EndEffector. */
   public CoralEndEffector() {
-    m_motor_9 =  new SparkMax(9, MotorType.kBrushless);
-    m_motor_10 =  new SparkMax(10, MotorType.kBrushless);
-    SparkMaxConfig global_config = new SparkMaxConfig();
-    SparkMaxConfig motor_10_config = new SparkMaxConfig();
-    SparkMaxConfig motor_9_config = new SparkMaxConfig();
-    global_config
+    m_leftMotor =  new SparkMax(9, MotorType.kBrushless);
+    m_rightMotor =  new SparkMax(10, MotorType.kBrushless);
+    SparkMaxConfig leftMotorConfig = new SparkMaxConfig();
+    SparkMaxConfig rightMotorConfig = new SparkMaxConfig();
+
+    rightMotorConfig
       .smartCurrentLimit(50)
-      .idleMode(IdleMode.kBrake);
-    motor_9_config
-      .apply(global_config)      
+      .idleMode(IdleMode.kBrake)  
       .inverted(true);
-    motor_10_config
-      .apply(global_config)
+    leftMotorConfig
+      .smartCurrentLimit(50)
+      .idleMode(IdleMode.kBrake)
       .inverted(false);
 
-    m_motor_9.configure(motor_9_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    m_motor_10.configure(motor_10_config,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
-    SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
-    SmartDashboard.putBoolean("At Intake", atInSensor());
-    SmartDashboard.putBoolean("At Outtake", atOutSensor());
-    SmartDashboard.putBoolean("Acquired", acquired());
+    m_leftMotor.configure(leftMotorConfig,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    m_rightMotor.configure(rightMotorConfig,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     
   }
 private void intake(){
-  m_motor_9.set(0.5);
-  m_motor_10.set(0.5);
+  m_leftMotor.set(0.5);
+  m_rightMotor.set(0.5);
 }
 private void stop(){
-  m_motor_9.set(0);
-  m_motor_10.set(0);
+  m_leftMotor.set(0);
+  m_rightMotor.set(0);
 }
 private void outtake(){
-  m_motor_9.set(0.5);
-  m_motor_10.set(0.2);
+  m_leftMotor.set(0.5);
+  m_rightMotor.set(0.2);
 }
 
 private void spitback(){
-  m_motor_9.set(-0.5);
-  m_motor_10.set(-0.5);
+  m_leftMotor.set(-0.5);
+  m_rightMotor.set(-0.5);
 }
 private void nudgeForward(){
-  m_motor_9.set(0.1);
-  m_motor_10.set(0.1);
+  m_leftMotor.set(0.1);
+  m_rightMotor.set(0.1);
 }
 public Command intakeCommand(){
   return new RunCommand(this::intake, this).withName("Intake");
@@ -117,11 +111,11 @@ public Trigger coralLoadedTrigger(){
 }
 
 private boolean atInSensor(){
-  return intakeSensor.getRange() <90;
+  return m_intakeSensor.getRange() <90;
 }
 
 private boolean atOutSensor(){
-  return acquiredSensor.getRange() <90;
+  return m_acquiredSensor.getRange() <90;
 }
 
 
@@ -137,8 +131,8 @@ private boolean acquired(){
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake sensor", intakeSensor.getRange());
-    SmartDashboard.putNumber("Acquired sensor", acquiredSensor.getRange());
+    SmartDashboard.putNumber("Intake sensor", m_intakeSensor.getRange());
+    SmartDashboard.putNumber("Acquired sensor", m_acquiredSensor.getRange());
     SmartDashboard.putBoolean("At Intake", atInSensor());
     SmartDashboard.putBoolean("At Outtake", atOutSensor());
     SmartDashboard.putBoolean("Acquired", acquired());
