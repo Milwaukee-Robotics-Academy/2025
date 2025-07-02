@@ -44,7 +44,7 @@ public class AlgaeEndEffector extends SubsystemBase {
   private RelativeEncoder m_armEncoder;
   private double armTarget = 0;
 
-  private AlgaeEndEffector() {
+  public AlgaeEndEffector() {
     m_intakeMotor = new SparkMax(11, MotorType.kBrushless);
     m_armMotor = new SparkMax(12, MotorType.kBrushless);
     m_armController = m_armMotor.getClosedLoopController();
@@ -147,7 +147,11 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_intakeMotor.set(Constants.Algae.Intake.kHold);
     currentState = IntakeState.HOLD;
   }
-
+  private void idle() {
+    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_intakeMotor.set(Constants.Algae.Intake.kHold);
+    currentState = IntakeState.NONE;
+  }
   private void groundIntake() {
     this.grabAlgae();
   }
@@ -174,6 +178,10 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   public Command scoreCommand() {
     return new RunCommand(this::score, this).withName("Score");
+  }
+
+  public Command idleCommand() {
+    return new RunCommand(this::idle, this).withName("Idle");
   }
   public Command manualControlCommand(Double setpoint, Double intakeSpeed) {
     return new RunCommand(() -> moveToSetpoint(setpoint, intakeSpeed), this).withName("Score");
