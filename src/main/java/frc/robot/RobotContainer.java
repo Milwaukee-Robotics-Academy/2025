@@ -131,13 +131,13 @@ public class RobotContainer {
   
     // Right Trigger -> Run ball intake, set to leave out when idle
     driverXbox
-        .rightTrigger(OIConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.runIntakeCommand());
+        .rightTrigger(OperatorConstants.kTriggerButtonThreshold)
+        .whileTrue(m_AlgaeEndEffector.groundIntakeCommand());
 
     // Left Trigger -> Run ball intake in reverse, set to stow when idle
     driverXbox
-        .leftTrigger(OIConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.reverseIntakeCommand());
+        .leftTrigger(OperatorConstants.kTriggerButtonThreshold)
+        .whileTrue(m_AlgaeEndEffector.scoreCommand());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 }
