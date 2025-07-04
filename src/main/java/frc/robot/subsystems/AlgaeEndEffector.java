@@ -43,7 +43,7 @@ public class AlgaeEndEffector extends SubsystemBase {
   private SparkMax m_armMotor;
   private SparkClosedLoopController m_armController;
   private RelativeEncoder m_intakeEncoder;
-  private RelativeEncoder m_armEncoder;
+  private SparkAbsoluteEncoder m_armEncoder;
   private double armTarget = 0;
 
   public AlgaeEndEffector() {
@@ -53,7 +53,7 @@ public class AlgaeEndEffector extends SubsystemBase {
 
     m_intakeEncoder = m_intakeMotor.getEncoder();
    // m_armEncoder = m_armMotor.getEncoder();
-    SparkAbsoluteEncoder m_armEncoder = m_armMotor.getAbsoluteEncoder();
+    m_armEncoder = m_armMotor.getAbsoluteEncoder();
   
 
     // Setup Configuration of SparkMax Motors
@@ -61,7 +61,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     SparkMaxConfig armMotorConfig = new SparkMaxConfig();
     SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
     globalConfig
-        .smartCurrentLimit(0)
+        .smartCurrentLimit(40)
         .idleMode(IdleMode.kBrake);
     intakeMotorConfig
         .apply(globalConfig);
@@ -76,16 +76,11 @@ public class AlgaeEndEffector extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.1)
+        .p(4.0)
         .i(0)
         .d(0)
-        .outputRange(-1, 1)
-        // Set PID values for velocity control in slot 1
-        .p(0.0001, ClosedLoopSlot.kSlot1)
-        .i(0, ClosedLoopSlot.kSlot1)
-        .d(0, ClosedLoopSlot.kSlot1)
-        .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
-        .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
+        .outputRange(-1, 1);
+        // Remove or replace this line with a valid method for configuring current limits if needed.
     //armMotorConfig.alternateEncoder.countsPerRevolution(8192);
     // Apply motor configuration to SparkMaxes
     m_intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
