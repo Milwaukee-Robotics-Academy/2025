@@ -70,7 +70,7 @@ public class AlgaeEndEffector extends SubsystemBase {
 
     /*
      * Configure the closed loop controller. We want to make sure we set the
-     * feedback sensor as the primary encoder.
+     * absolute encoder as feedback sensor.
      */
     armMotorConfig
         .idleMode(IdleMode.kCoast)
@@ -83,8 +83,7 @@ public class AlgaeEndEffector extends SubsystemBase {
         .i(0)
         .d(0)
         .positionWrappingEnabled(true);
-        // Remove or replace this line with a valid method for configuring current limits if needed.
-    //armMotorConfig.alternateEncoder.countsPerRevolution(8192);
+
     // Apply motor configuration to SparkMaxes
     m_intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -127,28 +126,28 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   private void stow() {
     armTarget = Constants.Algae.kStow;
-    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(0);
     currentState = IntakeState.STOW;
   }
 
   private void grabAlgae() {
     armTarget = Constants.Algae.kIntake;
-    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(Constants.Algae.Intake.kIn);
     currentState = IntakeState.INTAKE;
   }
 
   private void score() {
     armTarget = Constants.Algae.kScore;
-    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(Constants.Algae.Intake.kOut);
     currentState = IntakeState.SCORE;
   }
 
   private void hold() {
     armTarget = Constants.Algae.kHold;
-    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(Constants.Algae.Intake.kHold);
     currentState = IntakeState.HOLD;
   }
@@ -163,19 +162,23 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   private void moveToSetpoint(Double setpoint, Double intakeSpeed){
     armTarget = setpoint;
-    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(intakeSpeed);
     currentState = IntakeState.MANUAL;
   }
 
   private void incrementSetpoint(Double move, Double intakeSpeed){
     armTarget += move;
-    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(intakeSpeed);
     currentState = IntakeState.MANUAL;
   }
 
   /** ---------------------------------- Public Commands ------------------------------------ */
+
+  public double clampSetpoint(double setpoint){
+   return MathUtil.clamp(setpoint,0.0, 0.25);
+  }
   public Command stowCommand() {
     return new RunCommand(this::stow, this).withName("stow");
   }
