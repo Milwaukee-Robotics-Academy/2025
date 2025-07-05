@@ -54,9 +54,9 @@ public final class Constants {
     public static final int kIntakeMotorCanId = 13;
     public static final int kPivotMotorCanId = 14;
     public static final double kStow = 0;
-    public static final double kIntake = 0.686;
-    public static final double kHold =  0.686;
-    public static final double kScore = 0.719;
+    public static final double kIntake = 0.26;
+    public static final double kHold =  0.25;
+    public static final double kScore = 0.23;
     
 
     public static final class Intake {

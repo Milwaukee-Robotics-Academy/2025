@@ -16,6 +16,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -61,9 +62,10 @@ public class AlgaeEndEffector extends SubsystemBase {
     SparkMaxConfig armMotorConfig = new SparkMaxConfig();
     SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
     globalConfig
-        .smartCurrentLimit(40)
-        .idleMode(IdleMode.kBrake);
+        .smartCurrentLimit(40);
+
     intakeMotorConfig
+        .idleMode(IdleMode.kBrake)
         .apply(globalConfig);
 
     /*
@@ -71,15 +73,16 @@ public class AlgaeEndEffector extends SubsystemBase {
      * feedback sensor as the primary encoder.
      */
     armMotorConfig
+        .idleMode(IdleMode.kCoast)
         .apply(globalConfig);
     armMotorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(4.0)
+        .p(4)
         .i(0)
         .d(0)
-        .outputRange(-1, 1);
+        .positionWrappingEnabled(true);
         // Remove or replace this line with a valid method for configuring current limits if needed.
     //armMotorConfig.alternateEncoder.countsPerRevolution(8192);
     // Apply motor configuration to SparkMaxes
@@ -87,7 +90,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // Zero arm encoder on initialization
-
+    m_armController.setReference(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
   }
 
   /*-------------------------------- Generic Subsystem Functions --------------------------------*/
@@ -124,28 +127,28 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   private void stow() {
     armTarget = Constants.Algae.kStow;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(0);
     currentState = IntakeState.STOW;
   }
 
   private void grabAlgae() {
     armTarget = Constants.Algae.kIntake;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(Constants.Algae.Intake.kIn);
     currentState = IntakeState.INTAKE;
   }
 
   private void score() {
     armTarget = Constants.Algae.kScore;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(Constants.Algae.Intake.kOut);
     currentState = IntakeState.SCORE;
   }
 
   private void hold() {
     armTarget = Constants.Algae.kHold;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(Constants.Algae.Intake.kHold);
     currentState = IntakeState.HOLD;
   }
@@ -160,14 +163,14 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   private void moveToSetpoint(Double setpoint, Double intakeSpeed){
     armTarget = setpoint;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(intakeSpeed);
     currentState = IntakeState.MANUAL;
   }
 
   private void incrementSetpoint(Double move, Double intakeSpeed){
     armTarget += move;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    m_armController.setReference(MathUtil.clamp(armTarget,0.0, 0.25), ControlType.kPosition, ClosedLoopSlot.kSlot0);
     m_intakeMotor.set(intakeSpeed);
     currentState = IntakeState.MANUAL;
   }
