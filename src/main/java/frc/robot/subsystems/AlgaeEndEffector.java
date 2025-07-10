@@ -30,31 +30,33 @@ import frc.robot.Constants;
 
 public class AlgaeEndEffector extends SubsystemBase {
 
-  public enum IntakeState {
-    NONE,
-    STOW,
-    INTAKE,
-    HOLD,
-    SCORE,
-    MANUAL
-  }
+  // public enum IntakeState {
+  //   NONE,
+  //   STOW,
+  //   INTAKE,
+  //   HOLD,
+  //   SCORE,
+  //   MANUAL
+  // }
 
-  private IntakeState currentState = IntakeState.STOW;
+  // private IntakeState currentState = IntakeState.STOW;
   private SparkMax m_intakeMotor;
   private SparkMax m_armMotor;
-  private SparkClosedLoopController m_armController;
-  private RelativeEncoder m_intakeEncoder;
-  private SparkAbsoluteEncoder m_armEncoder;
-  private double armTarget = 0;
+
+  private RelativeEncoder m_armEncoder;
+  // private SparkClosedLoopController m_armController;
+  // private RelativeEncoder m_intakeEncoder;
+  // private SparkAbsoluteEncoder m_armEncoder;
+  // private double armTarget = 0;
 
   public AlgaeEndEffector() {
     m_intakeMotor = new SparkMax(11, MotorType.kBrushless);
     m_armMotor = new SparkMax(12, MotorType.kBrushless);
-    m_armController = m_armMotor.getClosedLoopController();
+
 
     m_intakeEncoder = m_intakeMotor.getEncoder();
-   // m_armEncoder = m_armMotor.getEncoder();
-    m_armEncoder = m_armMotor.getAbsoluteEncoder();
+    m_armEncoder = m_armMotor.getEncoder();
+
   
 
     // Setup Configuration of SparkMax Motors
@@ -73,23 +75,14 @@ public class AlgaeEndEffector extends SubsystemBase {
      * absolute encoder as feedback sensor.
      */
     armMotorConfig
-        .idleMode(IdleMode.kCoast)
+        .idleMode(IdleMode.kBrake)
         .apply(globalConfig);
-    armMotorConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        // Set PID values for position control. We don't need to pass a closed loop
-        // slot, as it will default to slot 0.
-        .p(4)
-        .i(0)
-        .d(0)
-        .positionWrappingEnabled(true);
+
 
     // Apply motor configuration to SparkMaxes
     m_intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // Zero arm encoder on initialization
-    m_armController.setReference(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
   }
 
   /*-------------------------------- Generic Subsystem Functions --------------------------------*/
@@ -97,7 +90,6 @@ public class AlgaeEndEffector extends SubsystemBase {
   @Override
   public void periodic() {
     outputTelemetry();
-    SmartDashboard.putString("Algae/State", getState().toString());
   }
 
 
@@ -108,7 +100,6 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   public void outputTelemetry() {
     SmartDashboard.putNumber("Arm/Position", m_armEncoder.getPosition());
-    SmartDashboard.putNumber("Arm/Target", armTarget);
     SmartDashboard.putNumber("Arm/Current", m_armMotor.getOutputCurrent());
     SmartDashboard.putNumber("Arm/Output", m_armMotor.getAppliedOutput());
     SmartDashboard.putNumber("Arm/Voltage", m_armMotor.getBusVoltage());
@@ -118,8 +109,8 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
 
   public void reset() {
-        // Zero arm encoder on initialization
-    //    m_armEncoder.setPosition(0);
+    // Zero arm encoder on initialization
+    m_armEncoder.setPosition(0);
   }
 
   /*---------------------------------- Custom Private Functions ----------------------------------*/
