@@ -65,39 +65,22 @@ public class AlgaeEndEffector extends SubsystemBase {
     SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
     globalConfig
         .smartCurrentLimit(40);
-
     intakeMotorConfig
         .idleMode(IdleMode.kBrake)
         .apply(globalConfig);
-
-    /*
-     * Configure the closed loop controller. We want to make sure we set the
-     * absolute encoder as feedback sensor.
-     */
     armMotorConfig
         .idleMode(IdleMode.kBrake)
         .apply(globalConfig);
-
-
     // Apply motor configuration to SparkMaxes
     m_intakeMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
   }
 
-  /*-------------------------------- Generic Subsystem Functions --------------------------------*/
-
   @Override
   public void periodic() {
     outputTelemetry();
   }
-
-
-  public void stop() {
-    m_armMotor.set(0.0);
-    m_intakeMotor.set(0.0);
-  }
-
   public void outputTelemetry() {
     SmartDashboard.putNumber("Arm/Position", m_armEncoder.getPosition());
     SmartDashboard.putNumber("Arm/Current", m_armMotor.getOutputCurrent());
@@ -108,97 +91,54 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   }
 
+
+  /*-------------------------------- Generic Subsystem Functions --------------------------------*/
+
+  public void stop() {
+    m_armMotor.set(0.0);
+    m_intakeMotor.set(0.0);
+  }
+
+
+
   public void reset() {
     // Zero arm encoder on initialization
     m_armEncoder.setPosition(0);
   }
 
-  /*---------------------------------- Custom Private Functions ----------------------------------*/
+  /*---------------------------------- Custom Private Methods ----------------------------------*/
 
-  private void stow() {
-    armTarget = Constants.Algae.kStow;
-    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(0);
-    currentState = IntakeState.STOW;
+  private void moveArmUp() {
+    m_armMotor.set(0.5);
   }
 
-  private void grabAlgae() {
-    armTarget = Constants.Algae.kIntake;
-    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kIn);
-    currentState = IntakeState.INTAKE;
+  private void moveArmDown() {
+
   }
 
-  private void score() {
-    armTarget = Constants.Algae.kScore;
-    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kOut);
-    currentState = IntakeState.SCORE;
+  private void intake(){
+
   }
 
-  private void hold() {
-    armTarget = Constants.Algae.kHold;
-    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kHold);
-    currentState = IntakeState.HOLD;
-  }
-  private void idle() {
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kStop);
-    currentState = IntakeState.NONE;
-  }
-  private void groundIntake() {
-    this.grabAlgae();
+  private void stopArm() {
+
   }
 
-  private void moveToSetpoint(Double setpoint, Double intakeSpeed){
-    armTarget = setpoint;
-    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(intakeSpeed);
-    currentState = IntakeState.MANUAL;
+  private void StopIntake() {
+
   }
 
-  private void incrementSetpoint(Double move, Double intakeSpeed){
-    armTarget += move;
-    m_armController.setReference(clampSetpoint(armTarget), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(intakeSpeed);
-    currentState = IntakeState.MANUAL;
-  }
+
 
   /** ---------------------------------- Public Commands ------------------------------------ */
 
-  public double clampSetpoint(double setpoint){
-   return MathUtil.clamp(setpoint,0.0, 0.25);
-  }
-  public Command stowCommand() {
-    return new RunCommand(this::stow, this).withName("stow");
+
+  public Command stopArmCommand() {
+
   }
 
-  public Command groundIntakeCommand() {
-    return new RunCommand(this::groundIntake, this).withName("Intake");
-  }
-
-  public Command holdCommand() {
-    return new RunCommand(this::hold, this).withName("Hold");
-  }
-
-  public Command scoreCommand() {
-    return new RunCommand(this::score, this).withName("Score");
-  }
-
-  public Command idleCommand() {
-    return new RunCommand(this::idle, this).withName("Idle");
-  }
-  public Command manualControlCommand(Double setpoint, Double intakeSpeed) {
-    return new RunCommand(() -> moveToSetpoint(setpoint, intakeSpeed), this).withName("Manual");
-  }
-  
-  public Command incrementArmCommand(Double setpoint, Double intakeSpeed) {
-    return new InstantCommand(() -> incrementSetpoint(setpoint, intakeSpeed), this).withName("increment");
-  }
-
-  private IntakeState getState() {
-    return currentState;
+  public Command moveArmUpCommand() {
+    return new RunCommand(this::moveArmUp, this).withName("ArmUp");
   }
 
 }
