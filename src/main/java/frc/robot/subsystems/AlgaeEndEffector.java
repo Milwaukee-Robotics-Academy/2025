@@ -42,7 +42,7 @@ public class AlgaeEndEffector extends SubsystemBase {
   // private IntakeState currentState = IntakeState.STOW;
   private SparkMax m_intakeMotor;
   private SparkMax m_armMotor;
-
+  private RelativeEncoder m_intakeEncoder;
   private RelativeEncoder m_armEncoder;
   // private SparkClosedLoopController m_armController;
   // private RelativeEncoder m_intakeEncoder;
@@ -134,6 +134,7 @@ public class AlgaeEndEffector extends SubsystemBase {
 
 
   public Command stopArmCommand() {
+    return new RunCommand(this::stop, this).withName("StopArm");
 
   }
 

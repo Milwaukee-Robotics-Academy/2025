@@ -113,34 +113,20 @@ public class RobotContainer {
     m_drivebase.setDefaultCommand(
         !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocitySim);
     m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
-    m_AlgaeEndEffector.setDefaultCommand(m_AlgaeEndEffector.idleCommand());
+    m_AlgaeEndEffector.setDefaultCommand(m_AlgaeEndEffector.stopArmCommand());
 
     if (Robot.isSimulation()) {
       driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d())))
       .andThen(Commands.runOnce(() -> m_AlgaeEndEffector.removeDefaultCommand())));
     } 
     
-    driverXbox.b().whileTrue(m_AlgaeEndEffector.stowCommand());
-    driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-    driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
+
     // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
     driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
     driverXbox.a().whileTrue(driveRobotCentric);
   
 
   
-    // Right Trigger -> Run ball intake, set to leave out when idle
-    driverXbox
-        .rightTrigger(OperatorConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.groundIntakeCommand().andThen(m_AlgaeEndEffector.holdCommand()));
-
-    // Left Trigger -> Run ball intake in reverse, set to stow when idle
-    driverXbox
-        .leftTrigger(OperatorConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.scoreCommand());
-
-    driverXbox.rightBumper().onTrue(m_AlgaeEndEffector.incrementArmCommand(0.10, 0.0));
-    driverXbox.leftBumper().onTrue(m_AlgaeEndEffector.incrementArmCommand(-0.1, 0.0));
     
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
