@@ -123,7 +123,9 @@ public class RobotContainer {
 
     // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
     driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
-    driverXbox.a().whileTrue(driveRobotCentric);
+   
+   /** Algae Commands */
+    driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.moveArmUpCommand());
   
 
   
