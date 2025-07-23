@@ -128,24 +128,15 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
 
   private void grabAlgae() {
-    armTarget = Constants.Algae.kIntake;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kIn);
-    currentState = IntakeState.STOW;
+
   }
 
   private void score() {
-    armTarget = Constants.Algae.kScore;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kOut);
-    currentState = IntakeState.SCORE;
+
   }
 
   private void hold() {
-    armTarget = Constants.Algae.kHold;
-    m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kHold);
-    currentState = IntakeState.HOLD;
+
   }
   private void idle() {
     m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
@@ -169,22 +160,22 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
 
   public Command groundIntakeCommand() {
-    return new RunCommand(this::groundIntake, this).withName("Intake");
+
   }
 
   public Command holdCommand() {
-    return new RunCommand(this::hold, this).withName("Hold");
+
   }
 
   public Command scoreCommand() {
-    return new RunCommand(this::score, this).withName("Score");
+
   }
 
   public Command idleCommand() {
     return new RunCommand(this::idle, this).withName("Idle");
   }
   public Command manualControlCommand(Double setpoint, Double intakeSpeed) {
-    return new RunCommand(() -> moveToSetpoint(setpoint, intakeSpeed), this).withName("Score");
+
   }
   
 

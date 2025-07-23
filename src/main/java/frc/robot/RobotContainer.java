@@ -119,9 +119,7 @@ public class RobotContainer {
       driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
     } 
     
-    driverXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
-    driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-    driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
+
     // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
     driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
     driverXbox.a().whileTrue(driveRobotCentric);
@@ -129,16 +127,10 @@ public class RobotContainer {
 
   
     // Right Trigger -> Run ball intake, set to leave out when idle
-    driverXbox
-        .rightTrigger(OperatorConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.groundIntakeCommand());
+
 
     // Left Trigger -> Run ball intake in reverse, set to stow when idle
-    driverXbox
-        .leftTrigger(OperatorConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.scoreCommand());
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+
 }
 
   /**
