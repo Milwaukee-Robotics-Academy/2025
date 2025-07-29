@@ -100,7 +100,7 @@ public class AlgaeEndEffector extends SubsystemBase {
 
 
   public void stop() {
-    m_armMotor.set(0.0);
+    m_armEncoder.setPosition(0.0);
     m_intakeMotor.set(0.0);
   }
 
@@ -116,6 +116,10 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
 
   public void reset() {
+    m_armEncoder.setPosition(0.0);
+    m_armController.setReference(0.0, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    armTarget=0.0;
+
   }
 
   /*---------------------------------- Custom Private Functions ----------------------------------*/
@@ -149,7 +153,7 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
   private void idle() {
     m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kHold);
+    m_intakeMotor.set(0.0);
     currentState = IntakeState.NONE;
   }
   private void groundIntake() {
@@ -162,6 +166,14 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_intakeMotor.set(intakeSpeed);
     currentState = IntakeState.MANUAL;
   }
+  private void manual(Double armSpeed, Double intakeSpeed){
+
+    m_armMotor.set(armSpeed);
+    m_intakeMotor.set(intakeSpeed);
+    currentState = IntakeState.MANUAL;
+  }
+
+
 
   /** ---------------------------------- Public Commands ------------------------------------ */
   public Command stowCommand() {
@@ -184,7 +196,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     return new RunCommand(this::idle, this).withName("Idle");
   }
   public Command manualControlCommand(Double setpoint, Double intakeSpeed) {
-    return new RunCommand(() -> moveToSetpoint(setpoint, intakeSpeed), this).withName("Score");
+    return new RunCommand(() -> moveToSetpoint(armTarget - setpoint, intakeSpeed), this).withName("Manual");
   }
   
 

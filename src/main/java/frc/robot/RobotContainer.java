@@ -119,13 +119,14 @@ public class RobotContainer {
       driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
     } 
     
-    driverXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
-    driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-    driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
+    driverXbox.b().whileTrue(m_AlgaeEndEffector.stowCommand());
+    // driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+    // driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
     // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
-    driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
+    driverXbox.start().whileTrue(Commands.runOnce(m_AlgaeEndEffector::reset));
     driverXbox.a().whileTrue(driveRobotCentric);
-  
+    driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(0.1, 0.0));
+    driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(-0.1, 0.0));
 
   
     // Right Trigger -> Run ball intake, set to leave out when idle
