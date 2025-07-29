@@ -200,7 +200,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     return new RunCommand(this::idle, this).withName("Idle");
   }
   public Command manualControlCommand(Double setpoint, Double intakeSpeed) {
-    return new RunCommand(() -> moveToSetpoint(armTarget - setpoint, intakeSpeed), this).withName("Manual");
+    return new RunCommand(() -> moveToSetpoint(armTarget + setpoint, intakeSpeed), this).withName("Manual");
   }
 
   private IntakeState getState() {
