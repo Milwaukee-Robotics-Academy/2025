@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class AlgaeEndEffector extends SubsystemBase {
@@ -87,7 +88,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_armMotor.configure(armMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // Zero arm encoder on initialization
-    m_armEncoder.setPosition(0);
+    this.reset();
   }
 
   /*-------------------------------- Generic Subsystem Functions --------------------------------*/
@@ -116,8 +117,11 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
 
   public void reset() {
-  }
+    m_armEncoder.setPosition(Constants.Algae.kStow);
+    m_armController.setReference(Constants.Algae.kStow, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    armTarget=Constants.Algae.kStow;
 
+  }
   /*---------------------------------- Custom Private Functions ----------------------------------*/
 
   private void stow() {
@@ -140,13 +144,20 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
   private void idle() {
     m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    m_intakeMotor.set(Constants.Algae.Intake.kHold);
+    m_intakeMotor.set(Constants.Algae.Intake.kStop);
     currentState = IntakeState.NONE;
   }
   private void groundIntake() {
     this.grabAlgae();
   }
 
+ /**
+  *  Manually move to a specific setpoint with a specified intake speed.
+  *  This is used for manual control of the intake and arm.
+  *  It sets the arm target position and the intake motor speed.
+  * @param setpoint
+  * @param intakeSpeed
+  */
   private void moveToSetpoint(Double setpoint, Double intakeSpeed){
     armTarget = setpoint;
     m_armController.setReference(armTarget, ControlType.kPosition, ClosedLoopSlot.kSlot0);
@@ -161,23 +172,36 @@ public class AlgaeEndEffector extends SubsystemBase {
 
   public Command groundIntakeCommand() {
 
+    //TODO: Implement ground intake command
+    return new WaitCommand(0);
+
   }
 
   public Command holdCommand() {
-
+    //TODO: Implement hold command
+    return new WaitCommand(0);
   }
 
   public Command scoreCommand() {
-
+    //TODO: Implement score command
+    return new WaitCommand(0);
   }
 
+  /**
+   * Idle command that sets the arm to its current target position
+   * and stops the intake motor.
+   * This command is used when the robot is not performing any specific action
+   * and the arm should maintain its position.
+   * It is useful for maintaining the arm's position while the robot is idle.
+   * It sets the arm target to the current position and stops the intake motor.
+   * @return
+   */
   public Command idleCommand() {
     return new RunCommand(this::idle, this).withName("Idle");
   }
   public Command manualControlCommand(Double setpoint, Double intakeSpeed) {
-
+    return new RunCommand(() -> moveToSetpoint(armTarget - setpoint, intakeSpeed), this).withName("Manual");
   }
-  
 
   private IntakeState getState() {
     return currentState;

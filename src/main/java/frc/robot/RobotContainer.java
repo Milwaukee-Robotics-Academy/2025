@@ -120,17 +120,11 @@ public class RobotContainer {
     } 
     
 
-    // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
-    driverXbox.start().whileTrue(Commands.runOnce(m_drivebase::zeroGyroWithAlliance));
-    driverXbox.a().whileTrue(driveRobotCentric);
-  
+    driverXbox.b().whileTrue(m_AlgaeEndEffector.stowCommand());
 
-  
-    // Right Trigger -> Run ball intake, set to leave out when idle
-
-
-    // Left Trigger -> Run ball intake in reverse, set to stow when idle
-
+    driverXbox.start().whileTrue(Commands.runOnce(m_AlgaeEndEffector::reset));
+    driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(0.1, 0.0));
+    driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(-0.1, 0.0));
 }
 
   /**
