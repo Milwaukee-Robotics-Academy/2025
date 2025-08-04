@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.AlgaeEndEffector;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.Vision;
 import swervelib.SwerveInputStream;
 
 /**
@@ -45,7 +47,7 @@ public class RobotContainer {
       "swerve/fleetbot"));
   private final CoralEndEffector m_CoralEndEffector = new CoralEndEffector();
   private final AlgaeEndEffector m_AlgaeEndEffector = new AlgaeEndEffector();
-  // private final Vision m_vision;
+  private final Vision m_vision;
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled
@@ -79,69 +81,70 @@ public class RobotContainer {
   Command driveFieldOrientedAnglularVelocitySim = m_drivebase.driveFieldOriented(driveAngularVelocitySim);
 
   private SendableChooser<Command> autoChooser;
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
-    NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
-    SmartDashboard.putData(CommandScheduler.getInstance());
-    SmartDashboard.putData(m_CoralEndEffector);
-    SmartDashboard.putData(m_AlgaeEndEffector); 
-    // Configure the trigger bindings
-    configureBindings();
-    DriverStation.silenceJoystickConnectionWarning(true);
-    // m_vision = new Vision();   
-
-    Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
-  }
-
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary predicate, or via the
-   * named factories in
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses
-   * for
-   * {@link CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
-   * Flight joysticks}.
-   */
-  private void configureBindings() {
-    // (Condition) ? Return-On-True : Return-on-False
-    m_drivebase.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocitySim);
-    m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
-    m_AlgaeEndEffector.setDefaultCommand(m_AlgaeEndEffector.idleCommand());
-
-    if (Robot.isSimulation()) {
-      driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-    } 
-    
-    driverXbox.b().whileTrue(m_AlgaeEndEffector.stowCommand());
-    // driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
-    // driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
-    // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
-    driverXbox.start().whileTrue(Commands.runOnce(m_AlgaeEndEffector::reset));
-    driverXbox.a().whileTrue(driveRobotCentric);
-    driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(0.1, 0.0));
-    driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(-0.1, 0.0));
-
+  private Trigger tooCloseToReef;
   
-    // Right Trigger -> Run ball intake, set to leave out when idle
-    driverXbox
-        .rightTrigger(OperatorConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.groundIntakeCommand());
-
-    // Left Trigger -> Run ball intake in reverse, set to stow when idle
-    driverXbox
-        .leftTrigger(OperatorConstants.kTriggerButtonThreshold)
-        .whileTrue(m_AlgaeEndEffector.scoreCommand());
-
-    tooCloseToReef.whileTrue(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 1)));
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+      NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+      NamedCommands.registerCommand("outtakeAndStop", m_CoralEndEffector.outtakeAndStopCommand());
+      SmartDashboard.putData(CommandScheduler.getInstance());
+      SmartDashboard.putData(m_CoralEndEffector);
+      SmartDashboard.putData(m_AlgaeEndEffector); 
+      // Configure the trigger bindings
+      configureBindings();
+      DriverStation.silenceJoystickConnectionWarning(true);
+      m_vision = new Vision();   
+  
+      Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
+    }
+  
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be
+     * created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+     * an arbitrary predicate, or via the
+     * named factories in
+     * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses
+     * for
+     * {@link CommandXboxController
+     * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
+     * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
+     * Flight joysticks}.
+     */
+    private void configureBindings() {
+      // (Condition) ? Return-On-True : Return-on-False
+      m_drivebase.setDefaultCommand(
+          !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocitySim);
+      m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
+      m_AlgaeEndEffector.setDefaultCommand(m_AlgaeEndEffector.idleCommand());
+  
+      if (Robot.isSimulation()) {
+        driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      } 
+      
+      driverXbox.b().whileTrue(m_AlgaeEndEffector.stowCommand());
+      // driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());
+      // driverXbox.x().whileTrue(m_CoralEndEffector.spitbackCommand());
+      // driverXbox.a().whileTrue(m_drivebase.driveToPose(new Pose2d(17.18, 1.15, Rotation2d.fromDegrees(143.03))));
+      driverXbox.start().whileTrue(Commands.runOnce(m_AlgaeEndEffector::reset));
+      driverXbox.a().whileTrue(driveRobotCentric);
+      driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(0.1, 0.0));
+      driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.manualControlCommand(-0.1, 0.0));
+  
+    
+      // Right Trigger -> Run ball intake, set to leave out when idle
+      driverXbox
+          .rightTrigger(OperatorConstants.kTriggerButtonThreshold)
+          .whileTrue(m_AlgaeEndEffector.groundIntakeCommand());
+  
+      // Left Trigger -> Run ball intake in reverse, set to stow when idle
+      driverXbox
+          .leftTrigger(OperatorConstants.kTriggerButtonThreshold)
+          .whileTrue(m_AlgaeEndEffector.scoreCommand());
+  
+      tooCloseToReef.whileTrue(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 1)));
     tooCloseToReef.whileFalse(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 0)));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -161,7 +164,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    // m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
+    m_vision.updatePoseEstimation(m_drivebase.getSwerveDrive());
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(m_CoralEndEffector);
     SmartDashboard.putData(m_drivebase);
