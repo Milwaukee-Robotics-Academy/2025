@@ -667,4 +667,23 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveDrive getSwerveDrive() {
     return swerveDrive;
   }
+  public boolean isRobotTooCloseToOpponentReef() {
+
+    Translation2d reefCenter;
+
+    if(isRedAlliance()){
+      reefCenter = new Translation2d(4.7, 4.1);
+    } else {
+      reefCenter = new Translation2d(13.2,4.1);
+    }
+    SmartDashboard.putNumber("Reef Center", getPose().getTranslation().getDistance(reefCenter));
+    return (getPose().getTranslation().getDistance(reefCenter) < 2.3);
+  }
+  
+  /**
+   * New trigger to test if the robot is too close to opponent reef
+   */
+  public Trigger tooCloseToReefTrigger() {
+    return new Trigger(this::isRobotTooCloseToOpponentReef);
+  }
 }

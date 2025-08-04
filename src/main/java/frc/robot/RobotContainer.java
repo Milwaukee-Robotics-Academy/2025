@@ -93,6 +93,8 @@ public class RobotContainer {
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     // m_vision = new Vision();   
+
+    Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
   }
 
   /**
@@ -138,6 +140,9 @@ public class RobotContainer {
     driverXbox
         .leftTrigger(OperatorConstants.kTriggerButtonThreshold)
         .whileTrue(m_AlgaeEndEffector.scoreCommand());
+
+    tooCloseToReef.whileTrue(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 1)));
+    tooCloseToReef.whileFalse(Commands.runOnce(() -> driverXbox.setRumble(RumbleType.kBothRumble, 0)));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 }
