@@ -679,6 +679,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     SmartDashboard.putNumber("Reef Center", getPose().getTranslation().getDistance(reefCenter));
     return (getPose().getTranslation().getDistance(reefCenter) < 2.3);
+   //return false;
   }
   
   /**

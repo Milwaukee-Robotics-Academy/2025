@@ -97,7 +97,7 @@ public class RobotContainer {
       DriverStation.silenceJoystickConnectionWarning(true);
       m_vision = new Vision();   
   
-      Trigger tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
+
     }
   
     /**
@@ -119,7 +119,7 @@ public class RobotContainer {
           !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedAnglularVelocitySim);
       m_CoralEndEffector.setDefaultCommand(m_CoralEndEffector.stopCommand());
       m_AlgaeEndEffector.setDefaultCommand(m_AlgaeEndEffector.idleCommand());
-  
+      tooCloseToReef = m_drivebase.tooCloseToReefTrigger();
       if (Robot.isSimulation()) {
         driverXbox.start().onTrue(Commands.runOnce(() -> m_drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
       } 
