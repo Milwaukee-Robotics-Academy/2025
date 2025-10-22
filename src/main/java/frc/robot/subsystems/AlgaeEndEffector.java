@@ -1,32 +1,18 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class AlgaeEndEffector extends SubsystemBase {
 
@@ -42,7 +28,7 @@ public class AlgaeEndEffector extends SubsystemBase {
   // private IntakeState currentState = IntakeState.STOW;
   private SparkMax m_intakeMotor;
   private SparkMax m_armMotor;
-  private RelativeEncoder m_intakeEncoder;
+//  private RelativeEncoder m_intakeEncoder;
   private RelativeEncoder m_armEncoder;
   // private SparkClosedLoopController m_armController;
   // private RelativeEncoder m_intakeEncoder;
@@ -54,7 +40,7 @@ public class AlgaeEndEffector extends SubsystemBase {
     m_armMotor = new SparkMax(12, MotorType.kBrushless);
 
 
-    m_intakeEncoder = m_intakeMotor.getEncoder();
+ //   m_intakeEncoder = m_intakeMotor.getEncoder();
     m_armEncoder = m_armMotor.getEncoder();
 
   
