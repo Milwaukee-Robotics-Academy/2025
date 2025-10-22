@@ -107,24 +107,30 @@ public class AlgaeEndEffector extends SubsystemBase {
   }
 
   /*---------------------------------- Custom Private Methods ----------------------------------*/
-
+/**
+ * THis moves the algae arm up at 50% speed
+ */
   private void moveArmUp() {
     m_armMotor.set(0.5);
   }
 
   private void moveArmDown() {
-
+    m_armMotor.set(-0.5);
   }
 
   private void intake(){
-
+    m_intakeMotor.set(0.5);
   }
 
+  private void outtake(){
+    m_intakeMotor.set(-0.5);
+  }
   private void stopArm() {
-
+    m_armMotor.set(0.0);
   }
 
   private void StopIntake() {
+    m_intakeMotor.set(0.0);
 
   }
 
@@ -137,9 +143,24 @@ public class AlgaeEndEffector extends SubsystemBase {
     return new RunCommand(this::stop, this).withName("StopArm");
 
   }
-
+/**
+ * when triggered, return the move up command to move the arm up at %50 spped
+ * @return
+ */
   public Command moveArmUpCommand() {
     return new RunCommand(this::moveArmUp, this).withName("ArmUp");
+  }
+
+  public Command moveArmDownCommand() {
+    return new RunCommand(this::moveArmDown, this).withName("ArmDown");
+  }
+
+  public Command intakeCommand() {
+    return new RunCommand(this::intake, this).withName("intake");
+  }
+
+  public Command outtakeCommand() {
+    return new RunCommand(this::outtake, this).withName("outtake");
   }
 
 }

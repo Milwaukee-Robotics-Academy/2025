@@ -126,7 +126,10 @@ public class RobotContainer {
    
    /** Algae Commands */
     driverXbox.rightBumper().whileTrue(m_AlgaeEndEffector.moveArmUpCommand());
-  
+    driverXbox.leftBumper().whileTrue(m_AlgaeEndEffector.moveArmDownCommand());
+    driverXbox.y().whileTrue(m_AlgaeEndEffector.intakeCommand());
+    driverXbox.x().whileTrue(m_AlgaeEndEffector.outtakeCommand());
+    driverXbox.b().onTrue(m_AlgaeEndEffector.stopArmCommand());
 
   
     
