@@ -124,9 +124,11 @@ public class RobotContainer {
             m_drivebase.drive(new Translation2d(0, driverXbox.getLeftTriggerAxis() - driverXbox.getRightTriggerAxis()),
                 0.0, false);
           }));
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(m_drivebase::lock, m_drivebase).repeatedly());
+    
       driverXbox.rightBumper().whileTrue(m_CoralEndEffector.outtakeCommand());
-      driverXbox.leftTrigger().whileTrue(m_CoralEndEffector.intakeCommand());
+     // driverXbox.rightBumper().onFalse(m_CoralEndEffector.stopCommand());
+      driverXbox.leftBumper().whileTrue(m_CoralEndEffector.intakeCommand());
+      driverXbox.leftBumper().onFalse(m_CoralEndEffector.stopCommand());
     } else {
       driverXbox.b().whileTrue(m_CoralEndEffector.outtakeCommand());
       driverXbox.y().whileTrue(m_CoralEndEffector.intakeWithSensorsCommand());

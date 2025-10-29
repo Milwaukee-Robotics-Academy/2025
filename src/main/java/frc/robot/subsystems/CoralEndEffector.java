@@ -56,26 +56,26 @@ public class CoralEndEffector extends SubsystemBase {
 
   private final SmartMotorControllerConfig motorLeftConfig = new SmartMotorControllerConfig(this)
       .withClosedLoopController(0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-      .withIdleMode(MotorMode.COAST)
-      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+      .withIdleMode(MotorMode.BRAKE)
+      .withTelemetry("CoralMotorLeft", TelemetryVerbosity.HIGH)
       .withStatorCurrentLimit(Amps.of(40))
       .withMotorInverted(false)
       .withClosedLoopRampRate(Seconds.of(0.25))
-      .withOpenLoopRampRate(Seconds.of(0.25))
+     // .withOpenLoopRampRate(Seconds.of(0.05))
       .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
       .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
       .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorControllerConfig motorRightConfig = new SmartMotorControllerConfig(this)
       .withClosedLoopController(0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-      .withIdleMode(MotorMode.COAST)
-      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+      .withIdleMode(MotorMode.BRAKE)
+      .withTelemetry("CoralMotorRight", TelemetryVerbosity.HIGH)
       .withStatorCurrentLimit(Amps.of(40))
       .withMotorInverted(true)
       .withClosedLoopRampRate(Seconds.of(0.25))
-      .withOpenLoopRampRate(Seconds.of(0.25))
+     // .withOpenLoopRampRate(Seconds.of(0.05))
       .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
       .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
       .withControlMode(ControlMode.CLOSED_LOOP);
@@ -191,11 +191,20 @@ public class CoralEndEffector extends SubsystemBase {
   }
 
   public Command stopCommand() {
-    return run(() -> {
+
+    return startRun(() -> {
       motorLeft.stopClosedLoopController();
       motorRight.stopClosedLoopController();
-    })
-        .withName("Stopped");
+    }, // Stop the closed loop controller since the motor is in ControlMode.CLOSED_LOOP
+        () -> {
+          motorLeft.setDutyCycle(0.0);
+          motorRight.setDutyCycle(0.0);
+        }) // Apply the dutycycle given
+        .finallyDo(() -> {
+          motorLeft.startClosedLoopController();
+          motorRight.startClosedLoopController();
+        }) // Start the closed loop controller when this command is interrupted
+        .withName("Stop Intake"); // Be nice, give your command name :)
   }
 
   public Command intakeWithSensorsCommand() {

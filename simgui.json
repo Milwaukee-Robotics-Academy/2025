@@ -1,22 +1,17 @@
 {
   "HALProvider": {
     "Other Devices": {
-      "SPARK MAX [2]": {
+      "SPARK MAX [10]": {
         "header": {
           "open": true
         }
       },
-      "SPARK MAX [4]": {
+      "SPARK MAX [9]": {
         "header": {
           "open": true
         }
       },
-      "SPARK MAX [5]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [7]": {
+      "SPARK MAX [9] RELATIVE ENCODER": {
         "header": {
           "open": true
         }
@@ -61,6 +56,7 @@
       "/LiveWindow/Ungrouped/Pigeon 2 [13]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/AlgaeEndEffector": "Subsystem",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/CoralEndEffector": "Subsystem",
       "/SmartDashboard/Encoders": "Alerts",
@@ -68,6 +64,8 @@
       "/SmartDashboard/IMU": "Alerts",
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
+      "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/PhotonAlerts": "Alerts",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
       "/SmartDashboard/Scheduler": "Scheduler",
@@ -80,6 +78,11 @@
     },
     "windows": {
       "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/CoralEndEffector": {
         "window": {
           "visible": true
         }
@@ -120,6 +123,11 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Motors": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -128,7 +136,19 @@
       "FMSInfo": {
         "open": true
       },
+      "LiveWindow": {
+        ".status": {
+          "open": true
+        },
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
+      },
       "SmartDashboard": {
+        "CoralEndEffector": {
+          "open": true
+        },
         "Field": {
           "open": true
         },
@@ -146,8 +166,7 @@
             },
             "frontright": {
               "open": true
-            },
-            "open": true
+            }
           },
           "open": true
         }
@@ -155,6 +174,15 @@
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "open": true
+    },
     "visible": true
   }
 }
